@@ -29,7 +29,9 @@ export default function Home() {
             <p className="mb-4 text-sm text-gray-300">
               The Lead Developer refuses to speak during the Daily Scrum. The team is getting frustrated.
             </p>
-            <Button className="w-full">Start Simulation</Button>
+            <Link href="/simulator">
+              <Button className="w-full">Start Simulation</Button>
+            </Link>
           </CardContent>
         </Card>
 
