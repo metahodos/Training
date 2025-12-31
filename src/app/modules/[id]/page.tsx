@@ -13,9 +13,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     // Auth Check
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-        redirect('/login');
-    }
+    // Guest mode enabled - redirect removed
+
 
     const currentModule = THEORY_MODULES.find(m => m.id === id);
     if (!currentModule) {
