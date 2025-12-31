@@ -9,7 +9,8 @@ export async function markTheoryCompleted(moduleId: string) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) throw new Error('Unauthorized');
+    // Guest mode: just return, client handles optimistic state
+    if (!user) return;
 
     // Upsert progress
     const { error } = await supabase.from('user_progress').upsert({
@@ -27,8 +28,6 @@ export async function submitQuiz(moduleId: string, answers: { questionId: string
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) return { success: false, error: 'Unauthorized' };
-
     const quiz = QUIZZES.find(q => q.moduleId === moduleId);
     if (!quiz) return { success: false, error: 'Quiz not found' };
 
@@ -44,9 +43,10 @@ export async function submitQuiz(moduleId: string, answers: { questionId: string
         }
     }
 
-    const passed = correctCount === totalQuestions; // Strict 100% to pass? Or configurable. Let's say 100% for now as per user request (Unlock).
+    const passed = correctCount === totalQuestions;
 
-    if (passed) {
+    // Only save progress if user is authenticated
+    if (user && passed) {
         await supabase.from('user_progress').upsert({
             user_id: user.id,
             module_id: moduleId,
