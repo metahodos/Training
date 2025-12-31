@@ -34,7 +34,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             <ModuleView
                 moduleId={id}
                 moduleTitle={currentModule.title}
-                theoryContent={currentModule.content}
+                lessons={currentModule.lessons}
                 quiz={quiz}
                 scenario={scenario ? { ...scenario, role_target: scenario.role_target as "SM" | "PO" } : null}
                 initialProgress={progress}

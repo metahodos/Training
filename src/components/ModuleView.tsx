@@ -5,11 +5,12 @@ import ReactMarkdown from 'react-markdown';
 import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { CheckCircle2, Lock, PlayCircle, BookOpen, BrainCircuit } from 'lucide-react';
+import { CheckCircle2, Lock, PlayCircle, BookOpen, BrainCircuit, ChevronRight, FileText } from 'lucide-react';
 import ChatInterface from '@/components/ChatInterface';
 import { markTheoryCompleted, submitQuiz } from '@/app/actions/progress';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { Lesson } from '@/lib/data/theory';
 
 interface QuizOption {
     id: string;
@@ -42,40 +43,64 @@ interface ProgressData {
 interface ModuleViewProps {
     moduleId: string;
     moduleTitle: string;
-    theoryContent: string;
+    lessons: Lesson[];
     quiz: QuizData | undefined;
     scenario: ScenarioData | null | undefined;
     initialProgress: ProgressData;
 }
 
-export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz, scenario, initialProgress }: ModuleViewProps) {
+export default function ModuleView({ moduleId, moduleTitle, lessons, quiz, scenario, initialProgress }: ModuleViewProps) {
     const router = useRouter();
     const [progress, setProgress] = useState<ProgressData>(initialProgress || { theory_completed: false, quiz_passed: false, simulation_completed: false });
     const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
     const [quizResult, setQuizResult] = useState<{ passed: boolean; score: number } | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Lesson State
+    const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
+    const [readLessons, setReadLessons] = useState<Set<string>>(new Set());
+
     // Initial state sync
     useEffect(() => {
-        if (initialProgress) setProgress(initialProgress);
-    }, [initialProgress]);
+        if (initialProgress) {
+            setProgress(initialProgress);
+            if (initialProgress.theory_completed) {
+                // If already completed server-side, mark all as read locally
+                setReadLessons(new Set(lessons.map(l => l.id)));
+            }
+        }
+    }, [initialProgress, lessons]);
+
+    const currentLesson = lessons[currentLessonIndex];
+    const allLessonsRead = lessons.every(l => readLessons.has(l.id));
 
     // --- LOGIC: Unlocking & Persistence ---
 
-    const handleMarkTheoryRead = async () => {
-        setIsSubmitting(true);
-        // Optimistic Update
-        const newProgress = { ...progress, theory_completed: true };
-        setProgress(newProgress);
+    const handleMarkLessonRead = async () => {
+        const newReadSet = new Set(readLessons);
+        newReadSet.add(currentLesson.id);
+        setReadLessons(newReadSet);
 
-        try {
-            await markTheoryCompleted(moduleId);
-            router.refresh(); // Sync server state
-        } catch (error) {
-            console.error("Failed to save progress", error);
-            // Revert on error? No, let's keep it optimistic for UX, retry later or let next load handle it.
-        } finally {
-            setIsSubmitting(false);
+        // Check if this was the last lesson
+        const isNowAllRead = lessons.every(l => newReadSet.has(l.id));
+
+        if (isNowAllRead && !progress.theory_completed) {
+            setIsSubmitting(true);
+            // Optimistic Update
+            const newProgress = { ...progress, theory_completed: true };
+            setProgress(newProgress);
+
+            try {
+                await markTheoryCompleted(moduleId);
+                router.refresh(); // Sync server state
+            } catch (error) {
+                console.error("Failed to save progress", error);
+            } finally {
+                setIsSubmitting(false);
+            }
+        } else if (currentLessonIndex < lessons.length - 1) {
+            // Auto-advance to next lesson if not the last one
+            setCurrentLessonIndex(prev => prev + 1);
         }
     };
 
@@ -149,7 +174,7 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
             {/* 3-COLUMN GRID SYSTEM */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full min-h-[700px]">
 
-                {/* COL 1: MASTERY AREA */}
+                {/* COL 1: MASTERY AREA (Multi-Lesson) */}
                 <Card className={cn("flex flex-col h-full transition-all duration-300", getCardStyles(theoryStatus))}>
                     <CardHeader className="py-4 border-b border-white/5">
                         <div className="flex items-center justify-between">
@@ -159,26 +184,64 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
                             {theoryStatus === 'completed' && <CheckCircle2 size={18} className="text-green-500" />}
                         </div>
                     </CardHeader>
-                    <CardContent className="flex-1 p-0 relative min-h-0">
-                        <ScrollArea className="h-[600px] p-6 text-sm leading-relaxed">
-                            <article className="prose prose-invert prose-sm max-w-none text-gray-300">
-                                <ReactMarkdown>{theoryContent}</ReactMarkdown>
-                            </article>
-                        </ScrollArea>
+                    <CardContent className="flex-1 p-0 relative min-h-0 flex flex-col md:flex-row h-full">
+                        {/* Sub-Navigation (Left Side of Card) */}
+                        <div className="w-full md:w-1/3 border-r border-white/5 bg-black/20 overflow-y-auto">
+                            <div className="p-3 space-y-1">
+                                <p className="text-xs font-semibold text-neutral-500 mb-2 px-2 uppercase tracking-wider">Lezioni</p>
+                                {lessons.map((lesson, idx) => {
+                                    const isRead = readLessons.has(lesson.id);
+                                    const isActive = idx === currentLessonIndex;
+                                    return (
+                                        <button
+                                            key={lesson.id}
+                                            onClick={() => setCurrentLessonIndex(idx)}
+                                            className={cn(
+                                                "w-full text-left px-3 py-2 rounded-md text-sm transition-all flex items-center justify-between group",
+                                                isActive ? "bg-blue-500/10 text-blue-300 font-medium" : "text-neutral-400 hover:bg-white/5 hover:text-neutral-200"
+                                            )}
+                                        >
+                                            <span className="truncate pr-2">{idx + 1}. {lesson.title}</span>
+                                            {isRead && <CheckCircle2 size={12} className="text-green-500 shrink-0" />}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Content Area (Right Side of Card) */}
+                        <div className="flex-1 flex flex-col h-full overflow-hidden">
+                            <ScrollArea className="flex-1 p-6 text-sm leading-relaxed h-[500px]">
+                                <article className="prose prose-invert prose-sm max-w-none text-gray-300">
+                                    <h2 className="text-xl font-bold mb-4 text-blue-100 flex items-center gap-2">
+                                        <span className="text-blue-500/50">#{currentLessonIndex + 1}</span>
+                                        {currentLesson.title}
+                                    </h2>
+                                    <ReactMarkdown>{currentLesson.content}</ReactMarkdown>
+                                </article>
+                            </ScrollArea>
+
+                            <div className="p-4 border-t border-white/5 bg-white/5 flex justify-between items-center">
+                                <span className="text-xs text-neutral-500">
+                                    {readLessons.size} / {lessons.length} completate
+                                </span>
+                                <Button
+                                    onClick={handleMarkLessonRead}
+                                    disabled={readLessons.has(currentLesson.id) && theoryStatus !== 'completed'}
+                                    size="sm"
+                                    className={cn("transition-all",
+                                        readLessons.has(currentLesson.id)
+                                            ? "bg-green-600/20 text-green-400 hover:bg-green-600/20"
+                                            : "bg-blue-600 hover:bg-blue-500 text-white"
+                                    )}
+                                >
+                                    {readLessons.has(currentLesson.id) ? "Letta" : "Segna come Letta"}
+                                    {!readLessons.has(currentLesson.id) && <ChevronRight size={14} className="ml-1" />}
+                                </Button>
+                            </div>
+                        </div>
                     </CardContent>
-                    <CardFooter className="p-4 bg-white/5 border-t border-white/5">
-                        <Button
-                            onClick={handleMarkTheoryRead}
-                            disabled={theoryStatus === 'completed' || isSubmitting}
-                            className={cn("w-full transition-all",
-                                theoryStatus === 'completed'
-                                    ? "bg-green-600/20 text-green-400 hover:bg-green-600/20 border border-green-600/20"
-                                    : "bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-900/20"
-                            )}
-                        >
-                            {theoryStatus === 'completed' ? "Modulo Completato" : "Conferma Lettura"}
-                        </Button>
-                    </CardFooter>
+                    {/* Main Footer removed as per-lesson action handles progress */}
                 </Card>
 
                 {/* COL 2: VALIDAZIONE TECNICA */}
@@ -188,7 +251,7 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
                             <div className="p-4 bg-neutral-900 rounded-full mb-3 border border-neutral-800">
                                 <Lock className="w-6 h-6 text-neutral-500" />
                             </div>
-                            <span className="text-sm font-medium text-neutral-400">Completa la Teoria</span>
+                            <span className="text-sm font-medium text-neutral-400">Completa tutte le lezioni</span>
                         </div>
                     )}
                     <Card className={cn("flex flex-col h-full transition-all duration-300", getCardStyles(quizStatus))}>

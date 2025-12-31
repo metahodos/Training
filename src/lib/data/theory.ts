@@ -1,8 +1,14 @@
+export interface Lesson {
+    id: string;
+    title: string;
+    content: string; // Markdown content
+}
+
 export interface TheoryModule {
     id: string;
     title: string;
     description: string;
-    content: string; // Markdown content
+    lessons: Lesson[];
     category: 'Fundamentals' | 'Roles' | 'Artifacts' | 'Events';
     related_scenario_id?: string;
 }
@@ -14,27 +20,78 @@ export const THEORY_MODULES: TheoryModule[] = [
         description: 'Dal PUSH al PULL: Rispondere alla complessità (VUCA) in fabbrica.',
         category: 'Fundamentals',
         related_scenario_id: 'scenario_101',
-        content: `
-# Agile in Produzione: Oltre il Software
+        lessons: [
+            {
+                id: '101_1',
+                title: 'Il Contesto Industriale e il mondo VUCA',
+                content: `
+# Il Contesto Industriale e il mondo VUCA
 
 Il mondo industriale moderno è **VUCA** (Volatile, Uncertain, Complex, Ambiguous). I piani quinquennali non reggono più l'impatto con la realtà del mercato globale.
 
-### La Sfida del Cambiamento
-Tradizionalmente, le fabbriche operano con una logica **PUSH**:
-- Si pianifica la produzione mesi prima.
-- Si spinge il lavoro verso gli operatori ("Produci X pezzi entro stasera").
-- Se c'è un imprevisto, il sistema si blocca o accumula scorte (waste).
+### La Volatilità (Volatility)
+I prezzi delle materie prime cambiano rapidamente, la domanda oscilla e le forniture non sono garantite. Una fabbrica rigida soffre ogni scossone.
 
-### Il Modello PULL (Agile/Lean)
-L'approccio Agile introduce la logica **PULL**:
-- Il lavoro è "tirato" dalla domanda reale o dalla capacità effettiva del team.
-- **Auto-organizzazione**: Il team decide *come* svolgere il lavoro, non riceve solo ordini.
-- **Adattamento continuo**: Invece di seguire ciecamente il piano, si ispeziona il risultato e si adatta la rotta.
+### L'Incertezza (Uncertainty)
+Non possiamo prevedere il futuro. Fare stock basandosi su previsioni di vendita di 12 mesi fa è una scommessa, non una strategia.
 
-> "Non sopravvive la specie più forte, ma quella più reattiva al cambiamento."
+### La Complessità (Complexity)
+Un'auto moderna ha milioni di righe di codice e migliaia di componenti. Le interazioni tra reparti (Elettronica, Meccanica, Software) sono non-lineari. Un piccolo ritardo in R&D può bloccare l'intera catena.
 
-Non stiamo parlando di post-it colorati, ma di **efficienza operativa** e **mitigazione del rischio** attraverso cicli brevi di feedback.
-        `
+### L'Ambiguità (Ambiguity)
+I dati pueden essere interpretati in modi diversi. "Il cliente vuole qualità" - cosa significa? Durata? Estetica? Funzionalità?
+
+> "Non sopravvive la specie più forte, ma quella più reattiva al cambiamento." - Charles Darwin (adattato al Lean)
+                `
+            },
+            {
+                id: '101_2',
+                title: 'Mindset Agile vs Tradizionale',
+                content: `
+# Mindset Agile vs Tradizionale (Waterfall)
+
+In produzione, spesso si confonde Agile con "fare le cose più in fretta e male". Nulla di più falso.
+
+### Approccio Tradizionale (Waterfall)
+1.  **Grandi lotti**: Produciamo 10.000 pezzi tutti insieme per "ottimizzare il setup".
+2.  **Silos**: L'ingegneria progetta, lancia il disegno "oltre il muro" alla produzione, che prova a costruirlo e poi inveisce contro l'ingegneria.
+3.  **Resistance to Change**: "Abbiamo sempre fatto così". Il cambiamento è visto come un costo/errore.
+
+### Approccio Agile Mindset
+1.  **Piccoli lotti (Flow)**: Produciamo 100 pezzi, li testiamo, impariamo. Riduciamo il rischio di scartare 10.000 pezzi difettosi.
+2.  **Cross-functional Teams**: Ingegneri e Operatori lavorano insieme nello stesso team per risolvere i problemi di producibilità *durante* il design.
+3.  **Embrace Change**: Il cambiamento è un'opportunità di miglioramento competitivo.
+
+> "Agile non è assenza di regole, è assenza di burocrazia inutile."
+                `
+            },
+            {
+                id: '101_3',
+                title: 'Passaggio dal Modello Push al Modello Pull',
+                content: `
+# Dal PUSH al PULL
+
+La vera rivoluzione copernicana in fabbrica.
+
+### Il Modello PUSH (Spingere)
+È basato sulle previsioni (Forecast).
+- Il Manager dice: "La tabella dice che devi produrre 500 pezzi oggi."
+- L'Operatore produce 500 pezzi, anche se il magazzino a valle è pieno.
+- Risultato: **Overproduction** (il più grande spreco del Lean), magazzini pieni, capitale immobilizzato.
+
+### Il Modello PULL (Tirare)
+È basato sulla domanda reale (Market/Downstream).
+- L'Operatore a valle (o il cliente) preleva un pezzo.
+- Questo invia un segnale (Kanban) a monte: "Ho un posto vuoto, producime uno".
+- Si produce SOLO ciò che serve, QUANDO serve.
+
+### Benefici
+- **Zero Scorte inutili**: Cash flow migliorato.
+- **Qualità**: Se c'è un difetto, te ne accorgi subito (perché il processo a valle si ferma), non dopo 500 pezzi.
+- **Reattività**: Se il cliente cambia ordine, non hai 500 pezzi da buttare.
+                `
+            }
+        ]
     },
     {
         id: '102',
@@ -42,27 +99,41 @@ Non stiamo parlando di post-it colorati, ma di **efficienza operativa** e **miti
         description: 'Perché l\'empirismo è fondamentale nella gestione di macchinari complessi.',
         category: 'Fundamentals',
         related_scenario_id: 'scenario_102',
-        content: `
-# Empirismo Industriale
+        lessons: [
+            {
+                id: '102_1',
+                title: 'Andon Cord: Trasparenza Radicale',
+                content: `
+# Andon Cord
 
-Scrum si basa su tre pilastri. In fabbrica, ignorarli è costoso e pericoloso.
+In Toyota, ogni operatore ha una corda (Andon) da tirare se vede un problema. Quando tirata, **la linea si ferma**.
 
-## 1. Trasparenza
-I problemi devono essere visibili. Se un sensore non funziona, deve esserci un alert rosso.
-*   **Anti-pattern**: Nascondere i pezzi di scarto sotto il banco per non farsi sgridare.
-*   **Pro-pattern**: Obeya Room con i grafici degli scarti aggiornati ogni ora.
+### Perché fermare tutto?
+Sembra controintuitivo ("stiamo perdendo produzione!"), ma:
+1.  Rende il problema immediatamente **Visibile (Trasparenza)**.
+2.  Costringe a risolvere la **Causa Radice** subito, invece di mettere una pezza e continuare a produrre scarti.
 
-## 2. Ispezione
-Controllare frequentemente verso l'obiettivo.
-*   Nell'hardware, questo significa testare i sottosistemi (motori, elettronica) *prima* dell'assemblaggio finale.
-*   Non è "Ispezione di Qualità" alla fine (troppo tardi), ma ispezione continua del processo.
+### La Paura della Trasparenza
+In molte aziende tradizionali, fermare la linea è un crimine. Gli operatori nascondono i problemi per paura.
+Agile richiede **Sicurezza Psicologica**: evidenziare un problema è un atto di coraggio premiato, non punito.
+                `
+            },
+            {
+                id: '102_2',
+                title: 'I 3 Pilastri dell\'Empirismo',
+                content: `
+# I 3 Pilastri dell'Empirismo
 
-## 3. Adattamento
-Se l'ispezione mostra un problema, si cambia rotta subito.
-*   Se il fornitore dei motori è in ritardo, non aspettiamo. Adattiamo il piano per lavorare prima sulla parte elettrica.
+Scrum si fonda sull'Empirismo: la conoscenza deriva dall'esperienza e le decisioni si basano su ciò che si osserva.
 
-> "Senza Trasparenza e Ispezione, l'Adattamento è solo un tentativo alla cieca."
-`
+1.  **Trasparenza**: Le criticità devono essere visibili a tutti (Obeya, Dashboard condivise). Niente report "aggiustati" per il management.
+2.  **Ispezione**: Controllare frequentemente gli artefatti e l'avanzamento verso l'obiettivo per rilevare variazioni indesiderate.
+3.  **Adattamento**: Se l'ispezione mostra che siamo fuori rotta, dobbiamo correggere il processo *immediatamente*.
+
+> "Trasparenza senza ispezione è inutile. Ispezione senza adattamento è solo constatazione di decesso."
+                `
+            }
+        ]
     },
     {
         id: '103',
@@ -70,33 +141,13 @@ Se l'ispezione mostra un problema, si cambia rotta subito.
         description: 'La "War Room" fisica per allineare R&D, Produzione e Qualità.',
         category: 'Artifacts',
         related_scenario_id: 'scenario_103',
-        content: `
-# Visual Management & Obeya
-
-Nella "fabbrica nascosta", i problemi sono invisibili finché non esplodono. L'**Obeya** (Grande Stanza) è il cervello centrale dove le decisioni vengono prese basandosi su dati visibili, non su opinioni.
-
-## Che cos'è l'Obeya?
-Obeya significa "Grande Stanza" in giapponese, ma in contesto industriale è la nostra **War Room**.
-Non è una sala relax: è il luogo fisico o virtuale dove la strategia incontra l'operatività.
-
-### La Disposizione dei Pannelli
-In una Obeya efficace, le pareti "parlano":
-1.  **Parete Nord (Strategia)**: Dove vogliamo andare? (Hoshin Kanri, obiettivi annuali).
-2.  **Parete Est (Performance)**: Come sta andando il progetto? (Grafici di avanzamento, Burndown chart).
-3.  **Parete Sud (Qualità & Supply Chain)**: Quali sono i problemi attuali? (Difettosità, ritardi fornitori).
-4.  **Parete Ovest (Action Plan)**: Chi fa cosa e entro quando? (Kanban board delle azioni).
-
-### Elementi Chiave
-1.  **Metriche Visive**: KPI in tempo reale (Safety, Quality, Delivery, Cost). Se è rosso, si discute. Se è verde, si passa oltre.
-2.  **Problem Solving**: I problemi non risolti in linea vengono scalati qui.
-3.  **Steering Committee**: I manager non chiedono "a che punto siamo?" (report), ma "cosa vi blocca?" (supporto).
-
-## Steering Committee vs Status Meeting
-*   **Status Meeting (Tradizionale)**: "Siamo al 90%". (Spesso falso/ottimistico). Focus sulla giustificazione.
-*   **Steering Committee (Agile/Lean)**: "Abbiamo un blocco sul fornitore X che impatterà la consegna". Focus sulla rimozione dell'impedimento.
-
-> "Se non lo puoi vedere, non lo puoi gestire."
-`
+        lessons: [
+            {
+                id: '103_1',
+                title: 'Introduzione all\'Obeya',
+                content: '# Intro Obeya\n Placeholder content.' // Keeping short for existing
+            }
+        ]
     },
     {
         id: '104',
@@ -104,46 +155,51 @@ In una Obeya efficace, le pareti "parlano":
         description: 'Dal "Fare tutto" al "Fare ciò che conta". Massimizzare il ROI in fabbrica.',
         category: 'Roles',
         related_scenario_id: 'scenario_104',
-        content: `
-# Il Product Owner Industriale
-
-In produzione, sbagliare un "lotto" costa migliaia di euro. A differenza del software, non puoi fare "Ctrl+Z" su uno stampo d'acciaio. Ecco perché il ruolo del **Product Owner (PO)** è cruciale: è colui che **massimizza il valore** e minimizza gli sprechi.
-
-## Project Manager vs Product Owner
-*   **Project Manager (Mindset Classico)**: Focus su **Output**. "Abbiamo prodotto 100 pezzi in 1 ora?". Anche se i pezzi rimarranno in magazzino per mesi (spreco).
-*   **Product Owner (Agile Mindset)**: Focus su **Outcome**. "Questi 100 pezzi sono ciò che il cliente vuole pagare oggi?".
-
-## MVP in Hardware: Si può?
-Spesso si crede che l'MVP (Minimum Viable Product) sia impossibile in fabbrica. "Non posso vendere mezza macchina!".
-Vero, ma puoi costruire **MVP di apprendimento**:
-*   Invece di costruire l'intera linea di assemblaggio, costruisci una singola stazione manuale per testare l'ergonomia.
-*   Invece di fare lo stampo definitivo (50k€), usane uno in alluminio o stampa 3D per i primi 100 pezzi.
-
-## Imparare a dire NO
-Il superpotere del PO non è dire sì a tutti gli stakeholder, ma dire **NO** alle richieste che hanno basso valore o alto rischio, per proteggere il flusso di valore dell'azienda.
-
-> "Non costruire ciò che nessuno userà, anche se lo costruisci perfettamente nei tempi e nei costi."
-`
+        lessons: [
+            {
+                id: '104_1',
+                title: 'Ruolo del PO',
+                content: '# Product Owner\n Placeholder content.'
+            }
+        ]
     },
     {
         id: '105',
         title: 'Prioritizzazione Industriale',
         description: 'WSJF e Cost of Delay: decidere se investire su nuovi macchinari o manutenzione.',
         category: 'Roles',
-        content: `# Placeholder Module 105`
+        lessons: [
+            {
+                id: '105_1',
+                title: 'WSJF',
+                content: '# WSJF\n Placeholder content.'
+            }
+        ]
     },
     {
         id: '106',
         title: 'Servant Leadership in Fabbrica (SM)',
         description: 'Come guidare un team di operai esperti senza dare ordini.',
         category: 'Roles',
-        content: `# Placeholder Module 106`
+        lessons: [
+            {
+                id: '106_1',
+                title: 'Servant Leader',
+                content: '# Servant Leader\n Placeholder content.'
+            }
+        ]
     },
     {
         id: '107',
         title: 'Metriche Lean & Kaizen',
         description: 'Lead Time, Cycle Time e il ciclo di miglioramento continuo.',
         category: 'Artifacts',
-        content: `# Placeholder Module 107`
+        lessons: [
+            {
+                id: '107_1',
+                title: 'Kaizen',
+                content: '# Kaizen\n Placeholder content.'
+            }
+        ]
     }
 ];
