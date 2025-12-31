@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { CheckCircle2, Lock, PlayCircle, BookOpen, BrainCircuit, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Lock, PlayCircle, BookOpen, BrainCircuit } from 'lucide-react';
 import ChatInterface from '@/components/ChatInterface';
 import { markTheoryCompleted, submitQuiz } from '@/app/actions/progress';
 import { cn } from '@/lib/utils';
