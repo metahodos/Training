@@ -76,8 +76,15 @@ Se l'ispezione mostra un problema, si cambia rotta subito.
 Nella "fabbrica nascosta", i problemi sono invisibili finché non esplodono. L'**Obeya** (Grande Stanza) è il cervello centrale dove le decisioni vengono prese basandosi su dati visibili, non su opinioni.
 
 ## Che cos'è l'Obeya?
-Non è solo una sala riunioni. È uno strumento di **allineamento strategico**.
-Tutti i dipartimenti (R&D, Produzione, Supply Chain) si incontrano qui davanti ai tabelloni fisici o digitali.
+Obeya significa "Grande Stanza" in giapponese, ma in contesto industriale è la nostra **War Room**.
+Non è una sala relax: è il luogo fisico o virtuale dove la strategia incontra l'operatività.
+
+### La Disposizione dei Pannelli
+In una Obeya efficace, le pareti "parlano":
+1.  **Parete Nord (Strategia)**: Dove vogliamo andare? (Hoshin Kanri, obiettivi annuali).
+2.  **Parete Est (Performance)**: Come sta andando il progetto? (Grafici di avanzamento, Burndown chart).
+3.  **Parete Sud (Qualità & Supply Chain)**: Quali sono i problemi attuali? (Difettosità, ritardi fornitori).
+4.  **Parete Ovest (Action Plan)**: Chi fa cosa e entro quando? (Kanban board delle azioni).
 
 ### Elementi Chiave
 1.  **Metriche Visive**: KPI in tempo reale (Safety, Quality, Delivery, Cost). Se è rosso, si discute. Se è verde, si passa oltre.

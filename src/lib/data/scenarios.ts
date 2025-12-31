@@ -49,10 +49,10 @@ export const INITIAL_SCENARIOS = [
     },
     {
         id: 'scenario_103',
-        title: "La Crisis Room in Obeya",
-        description: "Collo di bottiglia critico visualizzato in Obeya davanti al CEO. Il Manager vuole un colpevole, tu devi spostare il focus sul processo.",
-        role_target: 'Agile Coach',
+        title: "Il Tabellone non Mente",
+        description: "Durante il Daily in Obeya, emerge un ritardo critico su un fornitore. Il CEO è presente. Devi facilitare la discussione per ri-prioritizzare senza nascondere la verità.",
+        role_target: 'Scrum Master',
         difficulty: 'Advanced',
-        initial_context: "Sei in Obeya Room. Il tabellone segna ROSSO fisso sulla consegna del Prototipo X. Il CEO entra infuriato: 'Voglio sapere CHI è il responsabile di questo ritardo!'. Il team è pietrificato. Il blocco è dovuto a specifiche non chiare arrivate dall'R&D (che non è presente).",
+        initial_context: "Sei in Obeya Room per lo Steering Committee. Il tabellone segna un ritardo di 3 settimane sul motore. Un manager suggerisce: 'Non diciamolo ancora, magari recuperiamo'. Il CEO ti guarda in attesa. Il tabellone urla la verità.",
     }
 ];
