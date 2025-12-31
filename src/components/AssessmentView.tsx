@@ -27,10 +27,10 @@ export default function AssessmentView({ score, feedback, onRetry }: AssessmentP
                 <div className={`h-2 w-full ${score >= 70 ? 'bg-green-500' : 'bg-red-500'}`} />
                 <CardHeader className="text-center pb-2">
                     <CardTitle className="text-3xl font-bold">
-                        {score >= 70 ? 'Mission Accomplished! 🚀' : 'Mission Failed 💀'}
+                        {score >= 70 ? 'Missione Compiuta! 🚀' : 'Missione Fallita 💀'}
                     </CardTitle>
                     <CardDescription className="text-gray-400">
-                        Performance Score
+                        Punteggio Performance
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-8">
@@ -103,11 +103,11 @@ export default function AssessmentView({ score, feedback, onRetry }: AssessmentP
 
                     <div className="flex gap-4 pt-4">
                         <Button onClick={onRetry} variant="outline" className="flex-1 border-neutral-700 hover:bg-neutral-800 text-white">
-                            Retry Scenario
+                            Riprova Scenario
                         </Button>
                         <Link href="/" className="flex-1">
                             <Button className="w-full bg-white text-black hover:bg-gray-200">
-                                Return to Dashboard
+                                Torna alla Dashboard
                             </Button>
                         </Link>
                     </div>

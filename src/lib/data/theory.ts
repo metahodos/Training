@@ -1,60 +1,102 @@
-export const THEORY_MODULES = [
-    {
-        id: "scrum-pillars",
-        title: "I 3 Pilastri di Scrum",
-        category: "Fondamenta",
-        content: `
-# I 3 Pilastri dell'Empirismo
+export interface TheoryModule {
+    id: string;
+    title: string;
+    description: string;
+    content: string; // Markdown content
+    category: 'Fundamentals' | 'Roles' | 'Artifacts' | 'Events';
+    related_scenario_id?: string;
+}
 
-Scrum si fonda sulla teoria del controllo empirico dei processi (o empirismo). L'empirismo afferma che la conoscenza deriva dall'esperienza e che le decisioni si basano su ciò che si osserva.
+export const THEORY_MODULES: TheoryModule[] = [
+    {
+        id: '101',
+        title: 'Agile Mindset Industriale',
+        description: 'Dal PUSH al PULL: Rispondere alla complessità (VUCA) in fabbrica.',
+        category: 'Fundamentals',
+        related_scenario_id: 'scenario_101',
+        content: `
+# Agile in Produzione: Oltre il Software
+
+Il mondo industriale moderno è **VUCA** (Volatile, Uncertain, Complex, Ambiguous). I piani quinquennali non reggono più l'impatto con la realtà del mercato globale.
+
+### La Sfida del Cambiamento
+Tradizionalmente, le fabbriche operano con una logica **PUSH**:
+- Si pianifica la produzione mesi prima.
+- Si spinge il lavoro verso gli operatori ("Produci X pezzi entro stasera").
+- Se c'è un imprevisto, il sistema si blocca o accumula scorte (waste).
+
+### Il Modello PULL (Agile/Lean)
+L'approccio Agile introduce la logica **PULL**:
+- Il lavoro è "tirato" dalla domanda reale o dalla capacità effettiva del team.
+- **Auto-organizzazione**: Il team decide *come* svolgere il lavoro, non riceve solo ordini.
+- **Adattamento continuo**: Invece di seguire ciecamente il piano, si ispeziona il risultato e si adatta la rotta.
+
+> "Non sopravvive la specie più forte, ma quella più reattiva al cambiamento."
+
+Non stiamo parlando di post-it colorati, ma di **efficienza operativa** e **mitigazione del rischio** attraverso cicli brevi di feedback.
+        `
+    },
+    {
+        id: '102',
+        title: 'I 3 Pilastri: Trasparenza, Ispezione, Adattamento',
+        description: 'Perché l\'empirismo è fondamentale nella gestione di macchinari complessi.',
+        category: 'Fundamentals',
+        related_scenario_id: 'scenario_102',
+        content: `
+# Empirismo Industriale
+
+Scrum si basa su tre pilastri. In fabbrica, ignorarli è costoso e pericoloso.
 
 ## 1. Trasparenza
-Gli aspetti significativi del processo devono essere visibili ai responsabili del risultato. La trasparenza richiede che tali aspetti siano definiti da uno standard comune, in modo che gli osservatori condividano la stessa comprensione di ciò che viene visto.
+I problemi devono essere visibili. Se un sensore non funziona, deve esserci un alert rosso.
+*   **Anti-pattern**: Nascondere i pezzi di scarto sotto il banco per non farsi sgridare.
+*   **Pro-pattern**: Obeya Room con i grafici degli scarti aggiornati ogni ora.
 
 ## 2. Ispezione
-Gli utenti di Scrum devono ispezionare frequentemente gli artefatti di Scrum e i progressi verso un obiettivo per rilevare varianze indesiderate. L'ispezione non deve essere così frequente da intralciare il lavoro.
+Controllare frequentemente verso l'obiettivo.
+*   Nell'hardware, questo significa testare i sottosistemi (motori, elettronica) *prima* dell'assemblaggio finale.
+*   Non è "Ispezione di Qualità" alla fine (troppo tardi), ma ispezione continua del processo.
 
 ## 3. Adattamento
-Se un ispettore determina che uno o più aspetti di un processo deviano al di fuori dei limiti accettabili e che il prodotto risultante sarà inaccettabile, il processo o il materiale in lavorazione deve essere adeguato. L'adattamento deve essere fatto il prima possibile per ridurre al minimo ulteriori deviazioni.
-    `
+Se l'ispezione mostra un problema, si cambia rotta subito.
+*   Se il fornitore dei motori è in ritardo, non aspettiamo. Adattiamo il piano per lavorare prima sulla parte elettrica.
+
+> "Senza Trasparenza e Ispezione, l'Adattamento è solo un tentativo alla cieca."
+`
     },
     {
-        id: "sm-vs-po",
-        title: "Scrum Master vs Product Owner",
-        category: "Ruoli",
-        content: `
-# Chi fa cosa?
-
-## Product Owner (Il "Cosa")
-Il Product Owner è responsabile di massimizzare il valore del prodotto risultante dal lavoro dello Scrum Team.
-- Gestisce il Product Backlog.
-- Esprime chiaramente gli elementi del Backlog.
-- Ordina gli elementi per raggiungere meglio gli obiettivi.
-- Assicura che il Backlog sia visibile e comprensibile.
-
-## Scrum Master (Il "Come")
-Lo Scrum Master è responsabile di promuovere e supportare Scrum come definito nella Guida a Scrum.
-- Allena il team all'autogestione e alla cross-funzionalità.
-- Aiuta il team a concentrarsi sulla creazione di incrementi di alto valore.
-- Rimuove gli impedimenti al progresso del team.
-- Assicura che tutti gli eventi di Scrum abbiano luogo e siano positivi, produttivi e rispettino i limiti di tempo.
-    `
+        id: '103',
+        title: 'Obeya Room & Visual Management',
+        description: 'La "War Room" fisica per allineare R&D, Produzione e Qualità.',
+        category: 'Artifacts',
+        content: `# Placeholder Module 103`
     },
     {
-        id: "invest-criteria",
-        title: "Scrivere User Story Efficaci (INVEST)",
-        category: "Tecniche",
-        content: `
-# Criteri INVEST
-
-Una buona User Story dovrebbe rispettare l'acronimo INVEST:
-
-- **I**ndependent (Indipendente): Dovrebbe essere possibile svilupparla in qualsiasi ordine.
-- **N**egotiable (Negoziabile): Non è un contratto, ma un invito alla conversazione.
-- **V**aluable (Di Valore): Deve fornire valore all'utente finale o al business.
-- **E**stimable (Stimabile): Il team deve poter stimare lo sforzo necessario.
-- **S**mall (Piccola): Deve poter essere completata all'interno di uno Sprint.
-- **T**estable (Testabile): Deve avere criteri di accettazione chiari.
-    `
+        id: '104',
+        title: 'Il Valore del Prodotto (PO)',
+        description: 'Massimizzare il ROI in un contesto di budget hardware ridotto.',
+        category: 'Roles',
+        content: `# Placeholder Module 104`
+    },
+    {
+        id: '105',
+        title: 'Prioritizzazione Industriale',
+        description: 'WSJF e Cost of Delay: decidere se investire su nuovi macchinari o manutenzione.',
+        category: 'Roles',
+        content: `# Placeholder Module 105`
+    },
+    {
+        id: '106',
+        title: 'Servant Leadership in Fabbrica (SM)',
+        description: 'Come guidare un team di operai esperti senza dare ordini.',
+        category: 'Roles',
+        content: `# Placeholder Module 106`
+    },
+    {
+        id: '107',
+        title: 'Metriche Lean & Kaizen',
+        description: 'Lead Time, Cycle Time e il ciclo di miglioramento continuo.',
+        category: 'Artifacts',
+        content: `# Placeholder Module 107`
     }
 ];

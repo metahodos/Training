@@ -14,24 +14,27 @@ export async function POST(req: NextRequest) {
 
         // In a real app, validating the user is crucial
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
+
+        // DEV MODE: Allow anonymous simulation for testing
+        // if (!user) {
+        //     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        // }
 
         // Fetch scenario details (mocking for now if DB is empty, but ideally fetch from DB)
         // const { data: scenario } = await supabase.from('scenarios').select('*').eq('id', scenarioId).single();
 
-        // System Prompt Construction
+        // System Prompt Construction - INDUSTRIAL AGILE
         const systemPrompt = `
-    Role: You are an expert Agile Coach and sophisticated simulation engine.
-    Objective: Run a roleplay scenario where the user plays the role of a ${role} (e.g., Scrum Master).
-    Context: You are simulating a specific scenario. React realistically.
-    Persona: You are acting as the team members or stakeholders. Do not break character.
-    Current Scenario Context: (Dynamic context would go here)
-    Rules:
-    1. React realistically to the user's interventions.
-    2. Be brief and conversational.
-    3. If the user successfully resolves the conflict OR fails critically, mark the end of the simulation by appending [SIMULATION_END] to your response.
+    Ruolo: Sei un Agile Coach esperto in ambito INDUSTRIALE e MANIFATTURIERO.
+    Obiettivo: Gestire una simulazione di roleplay dove l'utente è uno ${role} (es. Scrum Master, PO) in una fabbrica o impianto.
+    
+    Contesto Attuale: Stai simulando uno scenario specifico di produzione hardware.
+    Persona: Interpreta i membri del team (operai, ingegneri meccanici, stakeholder di stabilimento).
+    
+    Regole:
+    1. Reagisci realisticamente. Se l'utente propone cose impossibili (es. "cambiamo il design domani"), gli ingegneri devono protestare per i tempi di stampaggio.
+    2. Sii breve e colloquiale (Italiano).
+    3. Se l'utente risolve il conflitto O fallisce gravemente, termina la risposta con [SIMULATION_END].
     `;
 
         const messages = [

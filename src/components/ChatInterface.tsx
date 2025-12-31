@@ -162,12 +162,12 @@ export default function ChatInterface({ scenarioId, initialContext, role }: Simu
             <CardHeader className="border-b border-neutral-800">
                 <CardTitle className="text-lg font-mono flex items-center gap-2">
                     <BotIcon className="w-5 h-5 text-green-400" />
-                    Simulation: {role} Scenario
+                    Simulazione: Scenario {role}
                 </CardTitle>
             </CardHeader>
 
-            <CardContent className="flex-1 p-0 overflow-hidden relative">
-                <ScrollArea className="h-full p-4">
+            <CardContent className="flex-1 p-0 flex flex-col overflow-hidden relative">
+                <ScrollArea className="flex-1 p-4">
                     <div className="space-y-4 pb-4">
                         {messages.map((m, i) => (
                             <div
@@ -185,9 +185,9 @@ export default function ChatInterface({ scenarioId, initialContext, role }: Simu
                                 </div>
 
                                 <div className={cn(
-                                    "p-3 rounded-2xl text-sm leading-relaxed",
+                                    "p-4 rounded-2xl text-base leading-relaxed shadow-sm",
                                     m.role === 'user'
-                                        ? "bg-blue-600/20 text-blue-100 rounded-tr-none border border-blue-500/30"
+                                        ? "bg-blue-600/20 text-blue-50 rounded-tr-none border border-blue-500/30 font-medium"
                                         : "bg-neutral-800 text-gray-100 rounded-tl-none border border-neutral-700"
                                 )}>
                                     {m.content}
@@ -198,13 +198,13 @@ export default function ChatInterface({ scenarioId, initialContext, role }: Simu
                     </div>
                 </ScrollArea>
 
-                <div className="p-4 bg-neutral-900 border-t border-neutral-800">
+                <div className="p-4 bg-neutral-900 border-t border-neutral-800 shrink-0">
                     <form onSubmit={handleSubmit} className="flex gap-2">
                         <Input
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="Type your response..."
-                            className="bg-neutral-950 border-neutral-700 focus:border-green-500/50 focus:ring-green-500/20"
+                            placeholder="Scrivi la tua risposta..."
+                            className="bg-neutral-950 border-neutral-700 focus:border-green-500/50 focus:ring-green-500/20 text-white placeholder:text-neutral-500"
                             disabled={isLoading}
                         />
                         <Button

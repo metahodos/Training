@@ -2,6 +2,8 @@
 
 import { OpenAI } from 'openai';
 import { createClient } from '@/utils/supabase/server';
+import { revalidatePath } from 'next/cache';
+import { THEORY_MODULES } from '@/lib/data/theory';
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -23,20 +25,30 @@ export async function processSimulationResult(history: SimulationHistory[], scen
 
     // 2. Generate Feedback via OpenAI (JSON Mode)
     const systemPrompt = `
-    Agisci come un Senior Agile Coach esperto. Valuta la sessione di roleplay seguente basandoti rigorosamente sulla Scrum Guide 2020.
-    
-    Analizza se l'utente (che agisce come Scrum Master o PO) ha rispettato i valori di Scrum, il timeboxing, e la servitù professionale.
-    
-    Restituisci ESCLUSIVAMENTE un oggetto JSON valido con questa struttura esatta:
-    {
-      "punteggio_globale": (numero intero 0-100),
-      "punteggio_tecnico": (numero intero 0-100, conoscenza Scrum),
-      "punteggio_soft_skills": (numero intero 0-100, empatia/comunicazione),
-      "analisi_critica": "Breve analisi testuale (max 50 parole) in Italiano",
-      "punti_forza": ["punto 1", "punto 2"],
-      "aree_miglioramento": ["area 1", "area 2"]
-    }
-  `;
+Sei un Agile Coach esperto in ambito INDUSTRIALE e MANIFATTURIERO (Hardware, Impianti, Produzione).
+Stai valutando uno studente che simula il ruolo di Scrum Master (SM) o Product Owner (PO) in un contesto fisico (Non software).
+
+IL TUO OBIETTIVO:
+Valutare se l'utente applica i principi Agile/Lean al mondo fisico: interazioni faccia a faccia (Obeya), validazione rapida (prototipi), gestione dei vincoli fisici e dei colli di bottiglia.
+
+CRITERI DI VALUTAZIONE (Industrial Empiricism):
+1.  **Fattibilità & Concretezza**: Propone soluzioni fisicamente realizzabili?
+2.  **Costi & Rischi**: Considera i costi di produzione o i rischi di sicurezza?
+3.  **MVP Fisico**: Cerca di validare l'ipotesi con il minimo sforzo costruttivo prima di ingegnerizzare tutto?
+4.  **Team Cross-Funzionale**: Coinvolge operatori, manutentori e progettisti insieme?
+
+FORMATO RISPOSTA (JSON STRICT):
+Devi rispondere ESCLUSIVAMENTE con un oggetto JSON valido. Niente markdown, niente premesse.
+Struttura:
+{
+  "punteggio_globale": (0-100),
+  "punteggio_tecnico": (0-100, competenza su Scrum/Lean industriale),
+  "punteggio_soft_skills": (0-100, negoziazione, leadership, empatia con operai/ingegneri),
+  "analisi_critica": "Analisi dettagliata in italiano del comportamento...",
+  "punti_forza": ["Punto 1", "Punto 2"],
+  "aree_miglioramento": ["Area 1", "Area 2"]
+}
+`;
 
     try {
         const response = await openai.chat.completions.create({
@@ -65,18 +77,32 @@ export async function processSimulationResult(history: SimulationHistory[], scen
 
         if (dbError) {
             console.error("DB Error:", dbError);
-            // We continue getting feedback even if DB save fails, but log it
         }
 
-        // 4. Update XP (Simple Logic: +10 XP per attempt + Score)
+        // 4. Update XP 
         const xpGained = 10 + Math.floor(feedbackData.punteggio_globale / 2);
-        await supabase.rpc('increment_xp', { x: xpGained, user_id: user.id });
-        // Note: increment_xp RPC needs to be created, or we do a fetch-update cycle. 
-        // For now let's do simple fetch-update since we might not have RPC rights easily
 
+        // Fetch current XP to update manually since RPC might be missing permissions
         const { data: profile } = await supabase.from('profiles').select('xp_points').eq('id', user.id).single();
         if (profile) {
             await supabase.from('profiles').update({ xp_points: (profile.xp_points || 0) + xpGained }).eq('id', user.id);
+        }
+
+        // 5. Update Module Progress (Unlock Next Module)
+        if (feedbackData.punteggio_globale > 70) {
+            const linkedModule = THEORY_MODULES.find(m => m.related_scenario_id === scenarioId);
+
+            if (linkedModule) {
+                await supabase.from('user_progress').upsert({
+                    user_id: user.id,
+                    module_id: linkedModule.id,
+                    simulation_completed: true,
+                    current_step: 'done',
+                    updated_at: new Date().toISOString()
+                }, { onConflict: 'user_id, module_id' });
+
+                revalidatePath('/', 'layout'); // Refresh Sidebar to unlock next module
+            }
         }
 
         return { success: true, feedback: feedbackData };

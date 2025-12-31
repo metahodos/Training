@@ -4,12 +4,13 @@ import { INITIAL_SCENARIOS } from '@/lib/data/scenarios';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
-export default async function SimulatorPage({ params }: PageProps) {
+export default async function SimulatorPage(props: PageProps) {
+    const params = await props.params;
     const { id } = params;
     const supabase = await createClient();
 
@@ -45,7 +46,7 @@ export default async function SimulatorPage({ params }: PageProps) {
     return (
         <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
             <div className="w-full max-w-5xl mb-8">
-                <h1 className="text-3xl font-bold text-white mb-2">Simulation: {scenario.title}</h1>
+                <h1 className="text-3xl font-bold text-white mb-2">Simulazione: {scenario.title}</h1>
                 <p className="text-gray-400">{scenario.description}</p>
             </div>
 
