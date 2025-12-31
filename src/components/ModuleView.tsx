@@ -5,8 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle2, Lock, PlayCircle, BookOpen, BrainCircuit } from 'lucide-react';
+import { CheckCircle2, Lock, PlayCircle, BookOpen, BrainCircuit, ArrowRight } from 'lucide-react';
 import ChatInterface from '@/components/ChatInterface';
 import { markTheoryCompleted, submitQuiz } from '@/app/actions/progress';
 import { cn } from '@/lib/utils';
@@ -56,19 +55,25 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
     const [quizResult, setQuizResult] = useState<{ passed: boolean; score: number } | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Initial state sync (in case props update)
+    // Initial state sync
     useEffect(() => {
         if (initialProgress) setProgress(initialProgress);
     }, [initialProgress]);
 
+    // --- LOGIC: Unlocking & Persistence ---
+
     const handleMarkTheoryRead = async () => {
         setIsSubmitting(true);
+        // Optimistic Update
+        const newProgress = { ...progress, theory_completed: true };
+        setProgress(newProgress);
+
         try {
             await markTheoryCompleted(moduleId);
-            setProgress((p) => ({ ...p, theory_completed: true }));
-            router.refresh();
+            router.refresh(); // Sync server state
         } catch (error) {
-            console.error(error);
+            console.error("Failed to save progress", error);
+            // Revert on error? No, let's keep it optimistic for UX, retry later or let next load handle it.
         } finally {
             setIsSubmitting(false);
         }
@@ -78,6 +83,7 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
         setIsSubmitting(true);
         try {
             const answersArray = Object.entries(quizAnswers).map(([qId, aId]) => ({ questionId: qId, answerId: aId }));
+            // We use the server action for validation to be secure
             const result = await submitQuiz(moduleId, answersArray);
 
             if (result.success && result.passed !== undefined && result.score !== undefined) {
@@ -85,10 +91,10 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
 
                 if (result.passed) {
                     setProgress((p) => ({ ...p, quiz_passed: true }));
-                    router.refresh();
+                    router.refresh(); // Sync sidebar/server
                 }
             } else {
-                console.error("Quiz submission failed:", result.error);
+                console.error("Quiz result invalid:", result);
             }
         } catch (error) {
             console.error(error);
@@ -96,6 +102,40 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
             setIsSubmitting(false);
         }
     };
+
+    // --- VISUALS: State Helpers ---
+
+    const getCardStatus = (step: 'theory' | 'quiz' | 'sim'): 'locked' | 'active' | 'completed' => {
+        if (step === 'theory') {
+            return progress.theory_completed ? 'completed' : 'active';
+        }
+        if (step === 'quiz') {
+            if (!progress.theory_completed) return 'locked';
+            return progress.quiz_passed ? 'completed' : 'active';
+        }
+        if (step === 'sim') {
+            if (!progress.quiz_passed) return 'locked';
+            return progress.simulation_completed ? 'completed' : 'active';
+        }
+        return 'locked';
+    };
+
+    const getCardStyles = (status: 'locked' | 'active' | 'completed') => {
+        switch (status) {
+            case 'locked':
+                return "border-neutral-800 bg-neutral-900/40 text-neutral-500 opacity-70 pointer-events-none";
+            case 'active':
+                return "border-blue-500 ring-1 ring-blue-500/20 bg-neutral-900 text-white shadow-lg shadow-blue-900/20";
+            case 'completed':
+                return "border-green-600/50 bg-green-950/10 text-gray-200";
+            default:
+                return "border-neutral-800";
+        }
+    };
+
+    const theoryStatus = getCardStatus('theory');
+    const quizStatus = getCardStatus('quiz');
+    const simStatus = getCardStatus('sim');
 
     return (
         <div className="w-full h-full space-y-6">
@@ -106,54 +146,58 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
                 <p className="text-neutral-400">Percorso di Certificazione Agile Industrial</p>
             </div>
 
-            {/* 3-Column Grid Layout */}
+            {/* 3-COLUMN GRID SYSTEM */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full min-h-[700px]">
 
-                {/* COLONNA 1: LEZIONE */}
-                <Card className="bg-neutral-900 border-neutral-800 text-gray-100 flex flex-col h-full">
-                    <CardHeader className="uppercase tracking-wider text-xs font-bold text-blue-500 border-b border-neutral-800/50 py-4">
-                        <div className="flex items-center gap-2">
-                            <BookOpen size={16} /> Fase 1: Teoria
-                            {progress.theory_completed && <CheckCircle2 size={16} className="text-green-500 ml-auto" />}
+                {/* COL 1: MASTERY AREA */}
+                <Card className={cn("flex flex-col h-full transition-all duration-300", getCardStyles(theoryStatus))}>
+                    <CardHeader className="py-4 border-b border-white/5">
+                        <div className="flex items-center justify-between">
+                            <span className="flex items-center gap-2 uppercase tracking-wider text-xs font-bold text-blue-400">
+                                <BookOpen size={16} /> 1. Mastery
+                            </span>
+                            {theoryStatus === 'completed' && <CheckCircle2 size={18} className="text-green-500" />}
                         </div>
                     </CardHeader>
-                    <CardContent className="flex-1 p-0 relative">
-                        <ScrollArea className="h-[600px] p-6">
-                            <article className="prose prose-invert prose-sm max-w-none">
+                    <CardContent className="flex-1 p-0 relative min-h-0">
+                        <ScrollArea className="h-[600px] p-6 text-sm leading-relaxed">
+                            <article className="prose prose-invert prose-sm max-w-none text-gray-300">
                                 <ReactMarkdown>{theoryContent}</ReactMarkdown>
                             </article>
                         </ScrollArea>
                     </CardContent>
-                    <CardFooter className="border-t border-neutral-800 p-4 bg-neutral-900/50">
+                    <CardFooter className="p-4 bg-white/5 border-t border-white/5">
                         <Button
                             onClick={handleMarkTheoryRead}
-                            disabled={progress.theory_completed || isSubmitting}
-                            className={cn(
-                                "w-full transition-all",
-                                progress.theory_completed ? "bg-green-600/20 text-green-500 hover:bg-green-600/20 cursor-default" : "bg-blue-600 hover:bg-blue-700"
+                            disabled={theoryStatus === 'completed' || isSubmitting}
+                            className={cn("w-full transition-all",
+                                theoryStatus === 'completed'
+                                    ? "bg-green-600/20 text-green-400 hover:bg-green-600/20 border border-green-600/20"
+                                    : "bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-900/20"
                             )}
                         >
-                            {progress.theory_completed ? "Completata" : "Segna come letto"}
+                            {theoryStatus === 'completed' ? "Modulo Completato" : "Conferma Lettura"}
                         </Button>
                     </CardFooter>
                 </Card>
 
-                {/* COLONNA 2: QUIZ */}
-                <div className={cn("relative flex flex-col h-full transition-all duration-500", !progress.theory_completed && "opacity-50 pointer-events-none")}>
-                    {!progress.theory_completed && (
-                        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-[1px] rounded-xl border border-neutral-800">
-                            <div className="text-center p-6">
-                                <Lock className="w-8 h-8 text-neutral-500 mx-auto mb-2" />
-                                <p className="text-sm text-neutral-400 font-medium">Completa la teoria per sbloccare</p>
+                {/* COL 2: VALIDAZIONE TECNICA */}
+                <div className="relative h-full">
+                    {quizStatus === 'locked' && (
+                        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px] rounded-xl border border-neutral-800">
+                            <div className="p-4 bg-neutral-900 rounded-full mb-3 border border-neutral-800">
+                                <Lock className="w-6 h-6 text-neutral-500" />
                             </div>
+                            <span className="text-sm font-medium text-neutral-400">Completa la Teoria</span>
                         </div>
                     )}
-
-                    <Card className="bg-neutral-900 border-neutral-800 text-gray-100 flex flex-col h-full">
-                        <CardHeader className="uppercase tracking-wider text-xs font-bold text-purple-500 border-b border-neutral-800/50 py-4">
-                            <div className="flex items-center gap-2">
-                                <BrainCircuit size={16} /> Fase 2: Validazione
-                                {progress.quiz_passed && <CheckCircle2 size={16} className="text-green-500 ml-auto" />}
+                    <Card className={cn("flex flex-col h-full transition-all duration-300", getCardStyles(quizStatus))}>
+                        <CardHeader className="py-4 border-b border-white/5">
+                            <div className="flex items-center justify-between">
+                                <span className={cn("flex items-center gap-2 uppercase tracking-wider text-xs font-bold", quizStatus === 'active' ? "text-purple-400" : "text-gray-500")}>
+                                    <BrainCircuit size={16} /> 2. Validazione
+                                </span>
+                                {quizStatus === 'completed' && <CheckCircle2 size={18} className="text-green-500" />}
                             </div>
                         </CardHeader>
                         <CardContent className="flex-1 p-6 relative">
@@ -162,36 +206,40 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
                                     <div className="space-y-8">
                                         {quiz.questions.map((q: QuizQuestion, i: number) => (
                                             <div key={q.id} className="space-y-3">
-                                                <h3 className="text-sm font-semibold text-white">{i + 1}. {q.text}</h3>
+                                                <h3 className="text-sm font-medium text-white/90">{i + 1}. {q.text}</h3>
                                                 <div className="grid gap-2">
-                                                    {q.options.map((opt: QuizOption) => (
-                                                        <div
-                                                            key={opt.id}
-                                                            onClick={() => !quizResult?.passed && setQuizAnswers(prev => ({ ...prev, [q.id]: opt.id }))}
-                                                            className={cn(
-                                                                "p-3 rounded border text-xs cursor-pointer transition-all",
-                                                                quizAnswers[q.id] === opt.id
-                                                                    ? "border-purple-500 bg-purple-500/10 text-purple-100"
-                                                                    : "border-neutral-800 hover:border-neutral-600 hover:bg-neutral-800",
-                                                                quizResult && opt.isCorrect && "border-green-500 bg-green-500/10",
-                                                                quizResult && !opt.isCorrect && quizAnswers[q.id] === opt.id && "border-red-500 bg-red-500/10"
-                                                            )}
-                                                        >
-                                                            {opt.text}
-                                                        </div>
-                                                    ))}
+                                                    {q.options.map((opt: QuizOption) => {
+                                                        const isSelected = quizAnswers[q.id] === opt.id;
+                                                        const isCorrect = quizResult?.passed && opt.isCorrect;
+                                                        const isWrong = quizResult && !opt.isCorrect && isSelected;
+
+                                                        return (
+                                                            <div
+                                                                key={opt.id}
+                                                                onClick={() => !quizResult?.passed && setQuizAnswers(prev => ({ ...prev, [q.id]: opt.id }))}
+                                                                className={cn(
+                                                                    "p-3 rounded border text-xs cursor-pointer transition-all",
+                                                                    isSelected ? "border-purple-500 bg-purple-500/10 text-purple-100" : "border-white/10 hover:bg-white/5 hover:border-white/20 text-gray-400",
+                                                                    isCorrect && "border-green-500 bg-green-500/10 text-green-100",
+                                                                    isWrong && "border-red-500 bg-red-500/10 text-red-100"
+                                                                )}
+                                                            >
+                                                                {opt.text}
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
                                     {quizResult && (
                                         <div className={cn(
-                                            "mt-6 p-3 rounded text-center font-bold text-sm",
-                                            quizResult.passed ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"
+                                            "mt-6 p-4 rounded border text-center font-bold text-sm animate-in fade-in slide-in-from-bottom-2",
+                                            quizResult.passed ? "bg-green-500/10 border-green-500/30 text-green-400" : "bg-red-500/10 border-red-500/30 text-red-400"
                                         )}>
                                             {quizResult.passed
-                                                ? "Test Superato! Simulazione Sbloccata."
-                                                : `Risultato: ${quizResult.score}/${quiz.questions.length}. Riprova per il 100%.`}
+                                                ? "Test Superato! Scenario Sbloccato."
+                                                : `Punteggio: ${quizResult.score} / ${quiz.questions.length}. Riprova per il 100%.`}
                                         </div>
                                     )}
                                 </ScrollArea>
@@ -199,61 +247,55 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
                                 <div className="text-center text-gray-500 mt-10">Nessun Quiz disponibile.</div>
                             )}
                         </CardContent>
-                        <CardFooter className="border-t border-neutral-800 p-4 bg-neutral-900/50">
-                            {quizResult?.passed ? (
-                                <Button className="w-full bg-green-600/20 text-green-500 cursor-default hover:bg-green-600/20">
-                                    Validazione Completata
-                                </Button>
+                        <CardFooter className="p-4 bg-white/5 border-t border-white/5">
+                            {quizStatus === 'completed' ? (
+                                <Button className="w-full bg-green-600/20 text-green-400 border border-green-600/20 cursor-default">Validazione Completata</Button>
                             ) : (
                                 <Button
                                     onClick={handleQuizSubmit}
                                     disabled={!quiz || isSubmitting || Object.keys(quizAnswers).length < (quiz?.questions.length || 0)}
-                                    className="w-full bg-purple-600 hover:bg-purple-700"
+                                    className="w-full bg-purple-600 hover:bg-purple-700 text-white"
                                 >
-                                    Valida Competenze
+                                    Valida Risposte
                                 </Button>
                             )}
                         </CardFooter>
                     </Card>
                 </div>
 
-                {/* COLONNA 3: SIMULAZIONE */}
-                <div className={cn("relative flex flex-col h-full transition-all duration-500", !progress.quiz_passed && "opacity-50 pointer-events-none")}>
-                    {!progress.quiz_passed && (
-                        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-[1px] rounded-xl border border-neutral-800">
-                            <div className="text-center p-6">
-                                <Lock className="w-8 h-8 text-neutral-500 mx-auto mb-2" />
-                                <p className="text-sm text-neutral-400 font-medium">Supera il Quiz al 100% per sbloccare</p>
+                {/* COL 3: SCENARIO OPERATIVO */}
+                <div className="relative h-full">
+                    {simStatus === 'locked' && (
+                        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px] rounded-xl border border-neutral-800">
+                            <div className="p-4 bg-neutral-900 rounded-full mb-3 border border-neutral-800">
+                                <Lock className="w-6 h-6 text-neutral-500" />
                             </div>
+                            <span className="text-sm font-medium text-neutral-400">Richiede 100% al Quiz</span>
                         </div>
                     )}
-
-                    <Card className="bg-neutral-900 border-neutral-800 text-gray-100 flex flex-col h-full overflow-hidden">
-                        <CardHeader className="uppercase tracking-wider text-xs font-bold text-orange-500 border-b border-neutral-800/50 py-4">
-                            <div className="flex items-center gap-2">
-                                <PlayCircle size={16} /> Fase 3: Scenario AI
-                                {progress.simulation_completed && <CheckCircle2 size={16} className="text-green-500 ml-auto" />}
+                    <Card className={cn("flex flex-col h-full transition-all duration-300 overflow-hidden", getCardStyles(simStatus))}>
+                        <CardHeader className="py-4 border-b border-white/5">
+                            <div className="flex items-center justify-between">
+                                <span className={cn("flex items-center gap-2 uppercase tracking-wider text-xs font-bold", simStatus === 'active' ? "text-orange-400" : "text-gray-500")}>
+                                    <PlayCircle size={16} /> 3. Scenario AI
+                                </span>
+                                {progress.simulation_completed && <CheckCircle2 size={18} className="text-green-500" />}
                             </div>
                         </CardHeader>
-                        <CardContent className="flex-1 p-0 relative flex flex-col">
+                        <CardContent className="flex-1 p-0 relative flex flex-col bg-neutral-950/50">
                             {scenario ? (
-                                <div className="flex-1 flex flex-col min-h-0 bg-neutral-950">
-                                    {/* Chat Interface wrapped in a container that fits the card */}
-                                    <div className="flex-1 overflow-hidden relative">
-                                        {/* Ideally pass a specific prop 'compact' to ChatInterface if possible, or just style it via CSS overrides in parent */}
-                                        <div className="absolute inset-0 overflow-y-auto">
-                                            <ChatInterface
-                                                scenarioId={scenario.id}
-                                                initialContext={scenario.initial_context || ''}
-                                                role={scenario.role_target || 'SM'}
-                                            />
-                                        </div>
-                                    </div>
+                                <div className="absolute inset-0 flex flex-col">
+                                    <ChatInterface
+                                        scenarioId={scenario.id}
+                                        initialContext={scenario.initial_context || ''}
+                                        role={scenario.role_target || 'SM'}
+                                    />
                                 </div>
                             ) : (
                                 <div className="text-center text-gray-500 p-6">Nessuno scenario collegato.</div>
                             )}
                         </CardContent>
+                        {/* No Footer for Sim needed as Chat has its own input area */}
                     </Card>
                 </div>
 
