@@ -10,9 +10,12 @@ import Link from 'next/link';
 interface AssessmentProps {
     score: number;
     feedback: {
-        analysis: string;
-        strengths: string[];
-        improvements: string[];
+        punteggio_globale: number;
+        punteggio_tecnico: number;
+        punteggio_soft_skills: number;
+        analisi_critica: string;
+        punti_forza: string[];
+        aree_miglioramento: string[];
     };
     onRetry: () => void;
 }
@@ -65,10 +68,10 @@ export default function AssessmentView({ score, feedback, onRetry }: AssessmentP
                     <div className="bg-neutral-800/50 p-4 rounded-lg border border-neutral-700">
                         <h3 className="font-semibold mb-2 flex items-center gap-2">
                             <AlertTriangle className="text-yellow-500" size={18} />
-                            AI Analysis
+                            Analisi dell'IA
                         </h3>
                         <p className="text-sm text-gray-300 leading-relaxed">
-                            {feedback.analysis}
+                            {feedback.analisi_critica}
                         </p>
                     </div>
 
@@ -76,10 +79,10 @@ export default function AssessmentView({ score, feedback, onRetry }: AssessmentP
                         {/* Strengths */}
                         <div className="space-y-2">
                             <h4 className="font-medium text-green-400 flex items-center gap-2">
-                                <CheckCircle2 size={16} /> Strengths
+                                <CheckCircle2 size={16} /> Punti di Forza
                             </h4>
                             <ul className="text-sm space-y-1 text-gray-400">
-                                {feedback.strengths.map((s, i) => (
+                                {feedback.punti_forza.map((s, i) => (
                                     <li key={i}>• {s}</li>
                                 ))}
                             </ul>
@@ -88,10 +91,10 @@ export default function AssessmentView({ score, feedback, onRetry }: AssessmentP
                         {/* Improvements */}
                         <div className="space-y-2">
                             <h4 className="font-medium text-red-400 flex items-center gap-2">
-                                <XCircle size={16} /> Improvements
+                                <XCircle size={16} /> Aree di Miglioramento
                             </h4>
                             <ul className="text-sm space-y-1 text-gray-400">
-                                {feedback.improvements.map((s, i) => (
+                                {feedback.aree_miglioramento.map((s, i) => (
                                     <li key={i}>• {s}</li>
                                 ))}
                             </ul>

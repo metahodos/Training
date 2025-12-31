@@ -21,11 +21,15 @@ interface SimulatorProps {
     role: 'SM' | 'PO';
 }
 
+import { processSimulationResult } from '@/app/actions/simulation';
+
 interface FeedbackData {
-    score: number;
-    analysis: string;
-    strengths: string[];
-    improvements: string[];
+    punteggio_globale: number;
+    punteggio_tecnico: number;
+    punteggio_soft_skills: number;
+    analisi_critica: string;
+    punti_forza: string[];
+    aree_miglioramento: string[];
 }
 
 export default function ChatInterface({ scenarioId, initialContext, role }: SimulatorProps) {
@@ -116,24 +120,37 @@ export default function ChatInterface({ scenarioId, initialContext, role }: Simu
     };
 
     const generateFeedback = async (history: Message[]) => {
-        // Mock feedback for now (real implementation would call another API endpoint)
-        // In a real app, we would send the full transcript to an evaluation endpoint.
+        setIsLoading(true);
+        try {
+            // Need to cast the history to the simple format expected by the server action
+            const simpleHistory = history.map(m => ({ role: m.role, content: m.content }));
+            const result = await processSimulationResult(simpleHistory, scenarioId);
 
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        setFeedback({
-            score: 85,
-            analysis: "You handled the situation well by protecting the team's time, but could have been more empathetic to the stakeholder's pressure.",
-            strengths: ["Assertiveness", "Process Adherence"],
-            improvements: ["Stakeholder Management", "Negotiation"]
-        });
+            if (result.success && result.feedback) {
+                setFeedback(result.feedback);
+            } else {
+                console.error("Feedback error:", result.error);
+                // Fallback for demo if unauthorized or error
+                setFeedback({
+                    punteggio_globale: 0,
+                    punteggio_tecnico: 0,
+                    punteggio_soft_skills: 0,
+                    analisi_critica: "Errore nel recupero del feedback o utente non loggato. Assicurati di aver effettuato il login.",
+                    punti_forza: [],
+                    aree_miglioramento: ["Riprova dopo il login"]
+                });
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     if (feedback) {
         return (
             <AssessmentView
-                score={feedback.score}
+                score={feedback.punteggio_globale}
                 feedback={feedback}
                 onRetry={() => window.location.reload()}
             />

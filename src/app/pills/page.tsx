@@ -1,0 +1,50 @@
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { BookOpen } from 'lucide-react';
+import { THEORY_MODULES } from '@/lib/data/theory';
+import Link from 'next/link';
+
+export default function PillsPage() {
+    return (
+        <div className="container mx-auto p-8 max-w-6xl">
+            <div className="mb-8">
+                <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-2">
+                    <BookOpen className="text-blue-500" />
+                    Pillole di Teoria Agile
+                </h1>
+                <p className="text-gray-400">
+                    Concetti fondamentali per padroneggiare Scrum e Agile.
+                </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {THEORY_MODULES.map((module) => (
+                    <Card key={module.id} className="bg-neutral-900 border-neutral-800 text-white hover:border-blue-500/50 transition-colors cursor-pointer group">
+                        <CardHeader>
+                            <div className="flex justify-between items-start mb-2">
+                                <Badge variant="outline" className="text-blue-400 border-blue-500/30">
+                                    {module.category}
+                                </Badge>
+                            </div>
+                            <CardTitle className="group-hover:text-blue-400 transition-colors">
+                                {module.title}
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <ScrollArea className="h-40 rounded-md border border-neutral-800 p-4 bg-neutral-950/50">
+                                <div className="text-sm text-gray-400 whitespace-pre-line">
+                                    {module.content.substring(0, 150)}...
+                                </div>
+                            </ScrollArea>
+                            <div className="mt-4 text-right">
+                                <span className="text-sm text-blue-500 font-medium group-hover:underline">LEGGI TUTTO &rarr;</span>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+        </div>
+    );
+}
