@@ -54,5 +54,13 @@ export const INITIAL_SCENARIOS = [
         role_target: 'Scrum Master',
         difficulty: 'Advanced',
         initial_context: "Sei in Obeya Room per lo Steering Committee. Il tabellone segna un ritardo di 3 settimane sul motore. Un manager suggerisce: 'Non diciamolo ancora, magari recuperiamo'. Il CEO ti guarda in attesa. Il tabellone urla la verità.",
+    },
+    {
+        id: 'scenario_104',
+        title: "L'MVP del Braccio Robotico",
+        description: "Il cliente vuole tutto subito per la fiera. Il team rischia il burnout e il fallimento. Tu devi negoziare un MVP che salvi la faccia e il budget.",
+        role_target: 'Product Owner',
+        difficulty: 'Intermediate',
+        initial_context: "Manca 1 mese alla fiera di Hannover. Il Direttore Commerciale vuole esporre il nuovo Robot a 6 assi completo. Il team R&D ti dice che il giunto rotante #3 si surriscalda ancora. Costruire l'intero robot ora è un suicidio (costo stampi: 50k). Devi proporre un'alternativa che porti valore (dimostrare la tecnologia) senza rischiare il disastro.",
     }
 ];

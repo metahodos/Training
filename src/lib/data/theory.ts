@@ -101,9 +101,29 @@ In una Obeya efficace, le pareti "parlano":
     {
         id: '104',
         title: 'Il Valore del Prodotto (PO)',
-        description: 'Massimizzare il ROI in un contesto di budget hardware ridotto.',
+        description: 'Dal "Fare tutto" al "Fare ciò che conta". Massimizzare il ROI in fabbrica.',
         category: 'Roles',
-        content: `# Placeholder Module 104`
+        related_scenario_id: 'scenario_104',
+        content: `
+# Il Product Owner Industriale
+
+In produzione, sbagliare un "lotto" costa migliaia di euro. A differenza del software, non puoi fare "Ctrl+Z" su uno stampo d'acciaio. Ecco perché il ruolo del **Product Owner (PO)** è cruciale: è colui che **massimizza il valore** e minimizza gli sprechi.
+
+## Project Manager vs Product Owner
+*   **Project Manager (Mindset Classico)**: Focus su **Output**. "Abbiamo prodotto 100 pezzi in 1 ora?". Anche se i pezzi rimarranno in magazzino per mesi (spreco).
+*   **Product Owner (Agile Mindset)**: Focus su **Outcome**. "Questi 100 pezzi sono ciò che il cliente vuole pagare oggi?".
+
+## MVP in Hardware: Si può?
+Spesso si crede che l'MVP (Minimum Viable Product) sia impossibile in fabbrica. "Non posso vendere mezza macchina!".
+Vero, ma puoi costruire **MVP di apprendimento**:
+*   Invece di costruire l'intera linea di assemblaggio, costruisci una singola stazione manuale per testare l'ergonomia.
+*   Invece di fare lo stampo definitivo (50k€), usane uno in alluminio o stampa 3D per i primi 100 pezzi.
+
+## Imparare a dire NO
+Il superpotere del PO non è dire sì a tutti gli stakeholder, ma dire **NO** alle richieste che hanno basso valore o alto rischio, per proteggere il flusso di valore dell'azienda.
+
+> "Non costruire ciò che nessuno userà, anche se lo costruisci perfettamente nei tempi e nei costi."
+`
     },
     {
         id: '105',

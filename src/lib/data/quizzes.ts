@@ -110,5 +110,37 @@ export const QUIZZES: ModuleQuiz[] = [
                 ]
             }
         ]
+    },
+    {
+        moduleId: '104',
+        questions: [
+            {
+                id: 'q104_1',
+                text: 'Qual è la differenza principale tra Project Manager (Tradizionale) e Product Owner (Agile)?',
+                options: [
+                    { id: 'a', text: 'Il PM comanda, il PO esegue.', isCorrect: false },
+                    { id: 'b', text: 'Il PM si focalizza su Output (Tempi/Costi), il PO su Outcome (Valore/ROI).', isCorrect: true },
+                    { id: 'c', text: 'Nessuna, sono solo nomi diversi.', isCorrect: false }
+                ]
+            },
+            {
+                id: 'q104_2',
+                text: 'Cosa definisce un MVP (Minimum Viable Product) in ambito Hardware?',
+                options: [
+                    { id: 'a', text: 'Un prodotto scadente fatto in fretta.', isCorrect: false },
+                    { id: 'b', text: 'La versione più piccola che permette di validare un\'ipotesi di rischio o valore.', isCorrect: true },
+                    { id: 'c', text: 'Il prodotto finale ma senza verniciatura.', isCorrect: false }
+                ]
+            },
+            {
+                id: 'q104_3',
+                text: 'Se uno stakeholder chiede una feature costosa ma di basso valore, cosa fa il PO?',
+                options: [
+                    { id: 'a', text: 'Dice "No" argomentando con i dati sul ROI.', isCorrect: true },
+                    { id: 'b', text: 'La inserisce nel backlog per non discutere.', isCorrect: false },
+                    { id: 'c', text: 'Chiede al team di fare straordinari.', isCorrect: false }
+                ]
+            }
+        ]
     }
 ];
