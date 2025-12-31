@@ -1,16 +1,25 @@
-import Link from 'next/link';
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-24 bg-neutral-950 text-white">
-      <h1 className="text-4xl font-bold mb-8">Agile Pro Coach</h1>
-      <p className="mb-8 text-neutral-400">Debug Mode: Manual Navigation</p>
+  const router = useRouter();
 
-      <Link href="/modules/101">
-        <button className="px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition font-bold">
-          VAI AL MODULO 101 (Click Manuale)
-        </button>
-      </Link>
+  useEffect(() => {
+    // Instant client-side redirect to the first module
+    router.replace('/modules/101');
+  }, [router]);
+
+  return (
+    <div className="flex h-screen w-full items-center justify-center bg-neutral-950 text-white">
+      <div className="flex flex-col items-center gap-4 animate-pulse">
+        {/* Simple Loading Brand */}
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
+          Agile Pro Coach
+        </h1>
+        <p className="text-xs text-neutral-500 uppercase tracking-widest">Caricamento Modulo...</p>
+      </div>
     </div>
   );
 }
