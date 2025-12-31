@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SendIcon, BotIcon, UserIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import AssessmentView from './AssessmentView';
+
 interface Message {
     role: 'user' | 'assistant' | 'system';
     content: string;
@@ -19,6 +21,13 @@ interface SimulatorProps {
     role: 'SM' | 'PO';
 }
 
+interface FeedbackData {
+    score: number;
+    analysis: string;
+    strengths: string[];
+    improvements: string[];
+}
+
 export default function ChatInterface({ scenarioId, initialContext, role }: SimulatorProps) {
     // Initial message from the system to start the roleplay
     const [messages, setMessages] = useState<Message[]>([
@@ -26,6 +35,7 @@ export default function ChatInterface({ scenarioId, initialContext, role }: Simu
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [feedback, setFeedback] = useState<FeedbackData | null>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -71,6 +81,23 @@ export default function ChatInterface({ scenarioId, initialContext, role }: Simu
                 const chunk = decoder.decode(value);
                 assistantMessage += chunk;
 
+                // Check for end of simulation tag
+                if (assistantMessage.includes('[SIMULATION_END]')) {
+                    // Remove the tag from display
+                    const cleanMessage = assistantMessage.replace('[SIMULATION_END]', '');
+
+                    setMessages((prev) => {
+                        const newMessages = [...prev];
+                        const lastIndex = newMessages.length - 1;
+                        newMessages[lastIndex] = { role: 'assistant', content: cleanMessage };
+                        return newMessages;
+                    });
+
+                    // Trigger feedback generation
+                    await generateFeedback([...messages, userMessage, { role: 'assistant', content: cleanMessage }]); // Use clean message history
+                    break;
+                }
+
                 // Update the last message with the streaming content
                 setMessages((prev) => {
                     const newMessages = [...prev];
@@ -87,6 +114,31 @@ export default function ChatInterface({ scenarioId, initialContext, role }: Simu
             setIsLoading(false);
         }
     };
+
+    const generateFeedback = async (history: Message[]) => {
+        // Mock feedback for now (real implementation would call another API endpoint)
+        // In a real app, we would send the full transcript to an evaluation endpoint.
+
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        setFeedback({
+            score: 85,
+            analysis: "You handled the situation well by protecting the team's time, but could have been more empathetic to the stakeholder's pressure.",
+            strengths: ["Assertiveness", "Process Adherence"],
+            improvements: ["Stakeholder Management", "Negotiation"]
+        });
+    };
+
+    if (feedback) {
+        return (
+            <AssessmentView
+                score={feedback.score}
+                feedback={feedback}
+                onRetry={() => window.location.reload()}
+            />
+        );
+    }
 
     return (
         <Card className="flex flex-col h-[600px] w-full max-w-4xl mx-auto bg-neutral-900 border-neutral-800 text-white shadow-2xl">
