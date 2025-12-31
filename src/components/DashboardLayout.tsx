@@ -9,6 +9,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
 
     // 0. Fetch All Modules (for Sidebar)
     const { data: dbModules } = await supabase.from('modules').select('id, title').order('id');
+
     const modulesList = dbModules || [];
 
     let userProfile = { name: 'Ospite', level: 'Apprendista', xp: 0, nextLevelXp: 1000 };
