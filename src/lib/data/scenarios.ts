@@ -46,5 +46,13 @@ export const INITIAL_SCENARIOS = [
         role_target: 'SM',
         difficulty: 'Senior',
         initial_context: 'Sei lo Scrum Master di linea. Un operatore nota, per la terza volta in un\'ora, una sbavatura sul carter. Il Capo Turno urla: "Non tirate quel maledetto cordone, siamo in ritardo di 50 pezzi!". L\'operatore ha la mano sulla corda di emergenza (Andon) ma trema. Se non ferma, avremo 500 pezzi da scartare stasera. Se ferma, il Capo Turno esplode. Cosa fai?',
+    },
+    {
+        id: 'scenario_103',
+        title: "La Crisis Room in Obeya",
+        description: "Collo di bottiglia critico visualizzato in Obeya davanti al CEO. Il Manager vuole un colpevole, tu devi spostare il focus sul processo.",
+        role_target: 'Agile Coach',
+        difficulty: 'Advanced',
+        initial_context: "Sei in Obeya Room. Il tabellone segna ROSSO fisso sulla consegna del Prototipo X. Il CEO entra infuriato: 'Voglio sapere CHI è il responsabile di questo ritardo!'. Il team è pietrificato. Il blocco è dovuto a specifiche non chiare arrivate dall'R&D (che non è presente).",
     }
 ];

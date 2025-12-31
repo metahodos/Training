@@ -78,5 +78,37 @@ export const QUIZZES: ModuleQuiz[] = [
                 ]
             }
         ]
+    },
+    {
+        moduleId: '103',
+        questions: [
+            {
+                id: 'q103_1',
+                text: 'Qual è lo scopo principale di una Obeya Room?',
+                options: [
+                    { id: 'a', text: 'Avere una bella sala per le riunioni con i clienti.', isCorrect: false },
+                    { id: 'b', text: 'Allineare visivamente tutti i dipartimenti su problemi e obiettivi in tempo reale.', isCorrect: true },
+                    { id: 'c', text: 'Nascondere i problemi alla direzione.', isCorrect: false }
+                ]
+            },
+            {
+                id: 'q103_2',
+                text: 'In uno Steering Committee efficace, cosa dovrebbe chiedere un manager?',
+                options: [
+                    { id: 'a', text: 'Di chi è la colpa del ritardo?', isCorrect: false },
+                    { id: 'b', text: 'Cosa vi sta bloccando e come posso aiutarvi?', isCorrect: true },
+                    { id: 'c', text: 'Quando sarà tutto finito al 100%?', isCorrect: false }
+                ]
+            },
+            {
+                id: 'q103_3',
+                text: 'Se un KPI sul tabellone è "Rosso", qual è l\'atteggiamento corretto?',
+                options: [
+                    { id: 'a', text: 'Trovare il colpevole.', isCorrect: false },
+                    { id: 'b', text: 'Ignorarlo se nessuno guarda.', isCorrect: false },
+                    { id: 'c', text: 'Ispezionarlo immediatamente come opportunità di miglioramento.', isCorrect: true }
+                ]
+            }
+        ]
     }
 ];

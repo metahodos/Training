@@ -86,11 +86,11 @@ export default async function Home() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-2 text-sm text-neutral-500 mt-2">
-                    <BookOpen size={16} /> 1 Lezione
+                    <BookOpen size={16} /> Mastery
                     <span className="mx-1">•</span>
-                    <BrainCircuit size={16} /> 1 Quiz
+                    <BrainCircuit size={16} /> Validazione
                     <span className="mx-1">•</span>
-                    <PlayCircle size={16} /> 1 Scenario
+                    <PlayCircle size={16} /> Scenario
                   </div>
                 </CardContent>
               </Card>

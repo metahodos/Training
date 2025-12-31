@@ -56,16 +56,7 @@ export async function updateSession(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser()
 
-    // Protect Dashboard and Simulator routes
-    if (
-        !user &&
-        !request.nextUrl.pathname.startsWith('/login') &&
-        !request.nextUrl.pathname.startsWith('/auth')
-    ) {
-        // For now, allow access to ease development, but standard practice is redirect.
-        // Uncomment the line below to enforce strict protection for production.
-        // return NextResponse.redirect(new URL('/login', request.url))
-    }
+    // Auth protection is now handled by Server Components (Layouts/Pages) per Next.js 16 best practices.
 
     return response
 }

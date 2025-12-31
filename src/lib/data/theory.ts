@@ -69,7 +69,27 @@ Se l'ispezione mostra un problema, si cambia rotta subito.
         title: 'Obeya Room & Visual Management',
         description: 'La "War Room" fisica per allineare R&D, Produzione e Qualità.',
         category: 'Artifacts',
-        content: `# Placeholder Module 103`
+        related_scenario_id: 'scenario_103',
+        content: `
+# Visual Management & Obeya
+
+Nella "fabbrica nascosta", i problemi sono invisibili finché non esplodono. L'**Obeya** (Grande Stanza) è il cervello centrale dove le decisioni vengono prese basandosi su dati visibili, non su opinioni.
+
+## Che cos'è l'Obeya?
+Non è solo una sala riunioni. È uno strumento di **allineamento strategico**.
+Tutti i dipartimenti (R&D, Produzione, Supply Chain) si incontrano qui davanti ai tabelloni fisici o digitali.
+
+### Elementi Chiave
+1.  **Metriche Visive**: KPI in tempo reale (Safety, Quality, Delivery, Cost). Se è rosso, si discute. Se è verde, si passa oltre.
+2.  **Problem Solving**: I problemi non risolti in linea vengono scalati qui.
+3.  **Steering Committee**: I manager non chiedono "a che punto siamo?" (report), ma "cosa vi blocca?" (supporto).
+
+## Steering Committee vs Status Meeting
+*   **Status Meeting (Tradizionale)**: "Siamo al 90%". (Spesso falso/ottimistico). Focus sulla giustificazione.
+*   **Steering Committee (Agile/Lean)**: "Abbiamo un blocco sul fornitore X che impatterà la consegna". Focus sulla rimozione dell'impedimento.
+
+> "Se non lo puoi vedere, non lo puoi gestire."
+`
     },
     {
         id: '104',
