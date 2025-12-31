@@ -35,7 +35,7 @@ export default function PillsPage() {
                         <CardContent>
                             <ScrollArea className="h-40 rounded-md border border-neutral-800 p-4 bg-neutral-950/50">
                                 <div className="text-sm text-gray-400 whitespace-pre-line">
-                                    {module.content.substring(0, 150)}...
+                                    {module.lessons?.[0]?.content.substring(0, 150) || "Nessun contenuto disponibile"}...
                                 </div>
                             </ScrollArea>
                             <div className="mt-4 text-right">
