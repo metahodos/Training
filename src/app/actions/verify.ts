@@ -49,8 +49,8 @@ export async function runSystemVerification() {
 
         log('Verification Complete.');
 
-    } catch (e: any) {
-        log(`CRITICAL ERROR: ${e.message}`);
+    } catch (e) {
+        log(`CRITICAL ERROR: ${(e as Error).message}`);
     }
 
     return logs;

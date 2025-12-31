@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+
 import { createClient } from '@/utils/supabase/server';
 import { INITIAL_SCENARIOS } from '@/lib/data/scenarios'; // Fallback
 import { THEORY_MODULES } from '@/lib/data/theory';
@@ -13,7 +12,7 @@ import { BookOpen, BrainCircuit, PlayCircle } from 'lucide-react';
 export default async function Home() {
   const supabase = await createClient();
   let scenarios = [];
-  let userProfile = { total_xp: 0, level: 'Apprendista' as UserLevel, badges: [] as string[] };
+  const userProfile = { total_xp: 0, level: 'Apprendista' as UserLevel, badges: [] as string[] };
 
   try {
     // Fetch Scenarios
@@ -97,7 +96,7 @@ export default async function Home() {
             ))}
 
             {/* Quick Scenarios (Legacy/Standalone) */}
-            {scenarios.filter(s => s.id !== '5').map((scenario: any) => (
+            {displayScenarios.filter(s => s.id !== '5').map((scenario) => (
               <Card key={scenario.id} className="bg-neutral-900 border-neutral-800 text-white hover:border-green-500/50 transition-colors">
                 <CardHeader>
                   <CardTitle className="text-xl flex justify-between items-start">

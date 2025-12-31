@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+
 import { CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 
@@ -68,7 +68,7 @@ export default function AssessmentView({ score, feedback, onRetry }: AssessmentP
                     <div className="bg-neutral-800/50 p-4 rounded-lg border border-neutral-700">
                         <h3 className="font-semibold mb-2 flex items-center gap-2">
                             <AlertTriangle className="text-yellow-500" size={18} />
-                            Analisi dell'IA
+                            Analisi dell&apos;IA
                         </h3>
                         <p className="text-sm text-gray-300 leading-relaxed">
                             {feedback.analisi_critica}

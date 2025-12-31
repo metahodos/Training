@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Trophy, Star, Medal } from 'lucide-react';
-import { LEVEL_THRESHOLDS, UserLevel } from '@/lib/gamification';
+import { UserLevel } from '@/lib/gamification';
 
 interface GamificationHeaderProps {
     totalXP: number;
@@ -12,7 +12,7 @@ interface GamificationHeaderProps {
 }
 
 export function GamificationHeader({ totalXP, level, badges }: GamificationHeaderProps) {
-    const nextLevelXP = LEVEL_THRESHOLDS['Master of Flow']; // Simplification
+    // const nextLevelXP = LEVEL_THRESHOLDS['Master of Flow']; // Simplification
     // Determine next level threshold dynamically could be better, but fixed for now
     let nextThreshold = 1000;
     if (level === 'Apprendista') nextThreshold = 1000;

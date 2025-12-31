@@ -29,9 +29,9 @@ const BAD_STORIES = [
 ];
 
 export default function UserStorySurgeon() {
-    const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
+    const [currentStoryIndex] = useState(0);
     const [userRewrite, setUserRewrite] = useState('');
-    const [feedback, setFeedback] = useState<any>(null);
+    const [feedback, setFeedback] = useState<{ score: number; analysis: string; invest_check: { independent: boolean; negotiable: boolean; valuable: boolean; estimable: boolean; small: boolean; testable: boolean } } | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const currentStory = BAD_STORIES[currentStoryIndex];
@@ -65,7 +65,7 @@ export default function UserStorySurgeon() {
                 <Stethoscope size={40} />
                 Il Chirurgo delle User Story
             </h1>
-            <p className="text-gray-400 mb-8 text-lg">Trasforma requisiti industriali vaghi in User Story 'INVEST' perfette.</p>
+            <p className="text-gray-400 mb-8 text-lg">Trasforma requisiti industriali vaghi in User Story &apos;INVEST&apos; perfette.</p>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl">
                 {/* Patient Chart */}
@@ -79,7 +79,7 @@ export default function UserStorySurgeon() {
                     <CardContent className="space-y-6">
                         <div className="p-6 bg-red-950/30 border border-red-900/50 rounded-xl">
                             <h3 className="text-sm font-semibold text-red-500 mb-2 uppercase tracking-wider">Sintomi (Testo Originale)</h3>
-                            <p className="text-xl font-mono text-red-200">"{currentStory.text}"</p>
+                            <p className="text-xl font-mono text-red-200">&quot;{currentStory.text}&quot;</p>
                         </div>
 
                         <div className="space-y-3">

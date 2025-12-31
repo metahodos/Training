@@ -2,14 +2,13 @@ import { ReactNode } from 'react';
 import { createClient } from '@/utils/supabase/server';
 import { AppSidebar, ModuleStatus } from '@/components/AppSidebar';
 import { THEORY_MODULES } from '@/lib/data/theory';
-import { UserLevel } from '@/lib/gamification';
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     let userProfile = { name: 'Ospite', level: 'Apprendista', xp: 0, nextLevelXp: 1000 };
-    let moduleStatuses: Record<string, ModuleStatus> = {};
+    const moduleStatuses: Record<string, ModuleStatus> = {};
 
     if (user) {
         // 1. Fetch Profile

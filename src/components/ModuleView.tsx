@@ -12,18 +12,46 @@ import { markTheoryCompleted, submitQuiz } from '@/app/actions/progress';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 
+interface QuizOption {
+    id: string;
+    text: string;
+    isCorrect?: boolean;
+}
+
+interface QuizQuestion {
+    id: string;
+    text: string;
+    options: QuizOption[];
+}
+
+interface QuizData {
+    questions: QuizQuestion[];
+}
+
+interface ScenarioData {
+    id: string;
+    initial_context: string;
+    role_target: "SM" | "PO";
+}
+
+interface ProgressData {
+    theory_completed: boolean;
+    quiz_passed: boolean;
+    simulation_completed: boolean;
+}
+
 interface ModuleViewProps {
     moduleId: string;
     moduleTitle: string;
     theoryContent: string;
-    quiz: any;
-    scenario: any;
-    initialProgress: any;
+    quiz: QuizData | undefined;
+    scenario: ScenarioData | null | undefined;
+    initialProgress: ProgressData;
 }
 
 export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz, scenario, initialProgress }: ModuleViewProps) {
     const router = useRouter();
-    const [progress, setProgress] = useState(initialProgress || { theory_completed: false, quiz_passed: false, simulation_completed: false });
+    const [progress, setProgress] = useState<ProgressData>(initialProgress || { theory_completed: false, quiz_passed: false, simulation_completed: false });
     const [activeTab, setActiveTab] = useState<'theory' | 'quiz' | 'practice'>('theory');
     const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
     const [quizResult, setQuizResult] = useState<{ passed: boolean; score: number } | null>(null);
@@ -35,13 +63,13 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
         } else if (progress.theory_completed && quiz) {
             setActiveTab('quiz');
         }
-    }, []);
+    }, [progress.quiz_passed, progress.theory_completed, scenario, quiz]); // Added dependencies to fix lint warning too
 
     const handleMarkTheoryRead = async () => {
         setIsSubmitting(true);
         try {
             await markTheoryCompleted(moduleId);
-            setProgress((p: any) => ({ ...p, theory_completed: true }));
+            setProgress((p) => ({ ...p, theory_completed: true }));
             setActiveTab('quiz');
             router.refresh();
         } catch (error) {
@@ -61,7 +89,7 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
                 setQuizResult({ passed: result.passed, score: result.score });
 
                 if (result.passed) {
-                    setProgress((p: any) => ({ ...p, quiz_passed: true }));
+                    setProgress((p) => ({ ...p, quiz_passed: true }));
                     router.refresh();
                 }
             } else {
@@ -159,11 +187,11 @@ export default function ModuleView({ moduleId, moduleTitle, theoryContent, quiz,
                             <CardDescription>Rispondi correttamente a tutte le domande per sbloccare la simulazione.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-8">
-                            {quiz.questions.map((q: any, i: number) => (
+                            {quiz.questions.map((q: QuizQuestion, i: number) => (
                                 <div key={q.id} className="space-y-4">
                                     <h3 className="text-lg font-medium text-white">{i + 1}. {q.text}</h3>
                                     <div className="grid gap-3">
-                                        {q.options.map((opt: any) => (
+                                        {q.options.map((opt: QuizOption) => (
                                             <div
                                                 key={opt.id}
                                                 onClick={() => !quizResult?.passed && setQuizAnswers(prev => ({ ...prev, [q.id]: opt.id }))}

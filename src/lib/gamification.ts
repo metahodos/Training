@@ -10,11 +10,18 @@ export const LEVEL_THRESHOLDS: Record<UserLevel, number> = {
     'Master of Flow': 10000
 };
 
+export interface SessionStats {
+    simulations_count?: number;
+    conflicts_resolved?: number;
+    wip_optimization?: boolean;
+    [key: string]: number | boolean | string | undefined;
+}
+
 export interface BadgeDefinition {
     id: string;
     name: string;
     description: string;
-    condition: (stats: any) => boolean;
+    condition: (stats: SessionStats) => boolean;
 }
 
 export const BADGES: BadgeDefinition[] = [
@@ -22,13 +29,13 @@ export const BADGES: BadgeDefinition[] = [
         id: 'gemba_walker',
         name: 'Gemba Walker',
         description: 'Hai completato la prima simulazione industriale andando in linea (Gemba).',
-        condition: (stats) => stats.simulations_count >= 1
+        condition: (stats) => (stats.simulations_count || 0) >= 1
     },
     {
         id: 'obeya_guardian',
         name: 'Obeya Guardian',
         description: 'Hai risolto un conflitto difficile usando i dati visuali.',
-        condition: (stats) => stats.conflicts_resolved >= 1 // Placeholder logic
+        condition: (stats) => (stats.conflicts_resolved || 0) >= 1 // Placeholder logic
     },
     {
         id: 'wip_slayer',
@@ -68,7 +75,7 @@ export async function awardXP(userId: string, xpAmount: number) {
     };
 }
 
-export async function checkBadges(userId: string, sessionStats: any) {
+export async function checkBadges(userId: string, sessionStats: SessionStats) {
     const supabase = await createClient();
     const newBadges: string[] = [];
 

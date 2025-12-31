@@ -44,9 +44,9 @@ export async function runDatabaseMigration() {
 
         return { success: true, message: 'Migration checked (Manual SQL execution recommended or use MCP tool)' };
 
-    } catch (error: any) {
+    } catch (error) {
         console.error('Migration failed:', error);
-        return { success: false, error: error.message };
+        return { success: false, error: (error as Error).message };
     }
 }
 

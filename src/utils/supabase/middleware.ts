@@ -54,7 +54,7 @@ export async function updateSession(request: NextRequest) {
         }
     )
 
-    const { data: { user } } = await supabase.auth.getUser()
+    await supabase.auth.getUser()
 
     // Auth protection is now handled by Server Components (Layouts/Pages) per Next.js 16 best practices.
 

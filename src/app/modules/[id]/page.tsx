@@ -17,15 +17,15 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         redirect('/login');
     }
 
-    const module = THEORY_MODULES.find(m => m.id === id);
-    if (!module) {
+    const currentModule = THEORY_MODULES.find(m => m.id === id);
+    if (!currentModule) {
         notFound();
     }
 
     const quiz = QUIZZES.find(q => q.moduleId === id);
 
-    const scenario = module.related_scenario_id
-        ? INITIAL_SCENARIOS.find(s => s.id === module.related_scenario_id)
+    const scenario = currentModule.related_scenario_id
+        ? INITIAL_SCENARIOS.find(s => s.id === currentModule.related_scenario_id)
         : null;
 
     const progress = await getModuleProgress(id);
@@ -34,10 +34,10 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <div className="p-8 bg-black min-h-screen text-white">
             <ModuleView
                 moduleId={id}
-                moduleTitle={module.title}
-                theoryContent={module.content}
+                moduleTitle={currentModule.title}
+                theoryContent={currentModule.content}
                 quiz={quiz}
-                scenario={scenario}
+                scenario={scenario ? { ...scenario, role_target: scenario.role_target as "SM" | "PO" } : null}
                 initialProgress={progress}
             />
         </div>

@@ -1,7 +1,7 @@
 import ChatInterface from '@/components/ChatInterface';
 import { createClient } from '@/utils/supabase/server';
 import { INITIAL_SCENARIOS } from '@/lib/data/scenarios';
-import { notFound } from 'next/navigation';
+
 
 interface PageProps {
     params: Promise<{
