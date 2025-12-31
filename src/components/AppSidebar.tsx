@@ -15,6 +15,7 @@ export interface ModuleStatus {
     moduleId: string;
     status: 'locked' | 'in_progress' | 'completed';
     currentStep: 'theory' | 'quiz' | 'practice' | 'done';
+    lockReason?: string;
 }
 
 interface AppSidebarProps {
@@ -108,8 +109,10 @@ const SidebarContent = ({ userProfile, moduleStatuses, pathname, modules }: Side
                 </div>
                 <nav className="space-y-1">
                     {(modules || []).map((module, index) => {
-                        const status = moduleStatuses[module.id]?.status || (index === 0 ? 'in_progress' : 'locked');
-                        const currentStep = moduleStatuses[module.id]?.currentStep || 'theory';
+                        const moduleStatus = moduleStatuses[module.id];
+                        const status = moduleStatus?.status || (index === 0 ? 'in_progress' : 'locked');
+                        const currentStep = moduleStatus?.currentStep || 'theory';
+                        const lockReason = moduleStatus?.lockReason;
 
                         const isActiveModule = pathname.includes(`/modules/${module.id}`);
                         const isLocked = status === 'locked';
@@ -150,11 +153,14 @@ const SidebarContent = ({ userProfile, moduleStatuses, pathname, modules }: Side
                                         )}
                                     >
                                         <div className="flex items-center w-full">
-                                            <div className={cn("mr-3 p-1.5 rounded-md transition-colors",
-                                                status === 'completed' ? "bg-green-500/20 text-green-500" :
-                                                    status === 'locked' ? "bg-neutral-800 text-neutral-600" :
-                                                        "bg-blue-600/20 text-blue-500"
-                                            )}>
+                                            <div
+                                                className={cn("mr-3 p-1.5 rounded-md transition-colors",
+                                                    status === 'completed' ? "bg-green-500/20 text-green-500" :
+                                                        status === 'locked' ? "bg-neutral-800 text-neutral-600" :
+                                                            "bg-blue-600/20 text-blue-500"
+                                                )}
+                                                title={isLocked ? (lockReason || "Complete previous module to unlock") : ""}
+                                            >
                                                 {status === 'locked' ? <Lock className="w-4 h-4" /> : <span className="text-xs font-bold">{index + 1}</span>}
                                             </div>
                                             <span className="truncate flex-1">{module.title}</span>

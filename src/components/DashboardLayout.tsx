@@ -40,18 +40,25 @@ export default async function DashboardLayout({ children }: { children: ReactNod
             const prevProgress = prevModule ? progressMap.get(prevModule.id) : null;
 
             let status: 'locked' | 'in_progress' | 'completed' = 'locked';
+            let lockReason: string | undefined;
 
             if (progress?.simulation_completed) {
                 status = 'completed';
             } else if (index === 0 || (prevProgress && prevProgress.simulation_completed)) {
                 // Unlocked if it's the first module OR previous is completed
                 status = 'in_progress';
+            } else {
+                // If locked, define why
+                if (index > 0 && (!prevProgress || !prevProgress.simulation_completed)) {
+                    lockReason = `Completa la simulazione del modulo: ${prevModule?.title || 'Precedente'}`;
+                }
             }
 
             moduleStatuses[module.id] = {
                 moduleId: module.id,
                 status,
-                currentStep: progress?.current_step || 'theory'
+                currentStep: progress?.current_step || 'theory',
+                lockReason
             };
         });
     } else {
