@@ -1,0 +1,9 @@
+Basandosi sui documenti forniti, QuickWorks è un approccio metodologico strutturato su 6 pilastri fondamentali, progettato per implementare i principi Agile all'interno dell'organizzazione (specificamente nel contesto SACMI descritto nei documenti) 1, 2.
+Ecco i sei pilastri che definiscono QuickWorks:
+	•	Approccio MVP (Minimum Viable Product): QuickWorks parte dalla creazione di una visione e obiettivi chiari e condivisi. Si procede realizzando una prima versione semplificata del prodotto per raccogliere feedback immediati e ridurre i rischi di mercato. Le versioni successive vengono sviluppate basandosi proprio su questi feedback 1.
+	•	Sviluppo Iterativo e Incrementale: Il metodo utilizza cicli brevi di lavoro, chiamati Sprint, che permettono di vedere subito i risultati. Questo approccio favorisce un rapido adattamento, aumentando la flessibilità e la velocità di esecuzione 1.
+	•	Obeya Room: Viene istituito uno spazio fisico (o virtuale) dedicato, chiamato "Obeya room", destinato alla comunicazione, alla condivisione e al monitoraggio del progetto. Questo ambiente favorisce la trasparenza, la collaborazione e la rapida risoluzione dei problemi 1.
+	•	Autonomia e Team Multidisciplinari Stabili: I team sono strutturati in modo che i membri siano "alla pari" e godano di maggiore libertà decisionale, il che incrementa la motivazione e i risultati. Figure come il Product Owner e lo Scrum Master sono essenziali per bilanciare il team 2.
+	•	Comunicazione Costante col Management: QuickWorks assicura un flusso continuo di informazioni tra il team operativo e il management (Steering Committee). Questo permette di prendere decisioni strategiche migliori e più informate 2.
+	•	Cultura dell'Innovazione "Fail Safe": Il metodo incoraggia il cambiamento e l'uso delle retrospettive. Un elemento chiave è la visione del fallimento "rapido" non come un errore, ma come un'opportunità di apprendimento per migliorare 2.
+

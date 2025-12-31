@@ -3,7 +3,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
-import { QUIZZES } from '@/lib/data/quizzes';
+
 
 export async function markTheoryCompleted(moduleId: string) {
     const supabase = await createClient();
@@ -28,18 +28,32 @@ export async function submitQuiz(moduleId: string, answers: { questionId: string
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    const quiz = QUIZZES.find(q => q.moduleId === moduleId);
-    if (!quiz) return { success: false, error: 'Quiz not found' };
+    // Fetch quiz questions for this module from Supabase
+    const { data: questions, error } = await supabase
+        .from('quizzes')
+        .select('*')
+        .eq('module_id', moduleId);
+
+    if (error || !questions || questions.length === 0) {
+        return { success: false, error: 'Quiz not found' };
+    }
 
     // Validate Answers
     let correctCount = 0;
-    const totalQuestions = quiz.questions.length;
+    const totalQuestions = questions.length;
 
-    for (const q of quiz.questions) {
+    for (const q of questions) {
         const userAnswer = answers.find(a => a.questionId === q.id);
-        const correctOption = q.options.find(o => o.isCorrect);
-        if (userAnswer && userAnswer.answerId === correctOption?.id) {
-            correctCount++;
+        if (!userAnswer) continue;
+
+        // DB options are string[]. We mapped index to ID valid client-side (0, 1, 2...)
+        const selectedOptionIndex = parseInt(userAnswer.answerId, 10);
+
+        if (!isNaN(selectedOptionIndex) && Array.isArray(q.options)) {
+            const selectedText = q.options[selectedOptionIndex];
+            if (selectedText === q.correct_answer) {
+                correctCount++;
+            }
         }
     }
 

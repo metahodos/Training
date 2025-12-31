@@ -3,7 +3,7 @@
 import { OpenAI } from 'openai';
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
-import { THEORY_MODULES } from '@/lib/data/theory';
+
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -90,12 +90,20 @@ Struttura:
 
         // 5. Update Module Progress (Unlock Next Module)
         if (feedbackData.punteggio_globale > 70) {
-            const linkedModule = THEORY_MODULES.find(m => m.related_scenario_id === scenarioId);
+            // Find which module this scenario belongs to
+            const { data: scenarioData } = await supabase
+                .from('scenarios')
+                .select('module_id')
+                .eq('id', scenarioId)
+                .single();
 
-            if (linkedModule) {
+            if (scenarioData && scenarioData.module_id) {
+                const currentModuleId = scenarioData.module_id;
+
+                // Mark current as done
                 await supabase.from('user_progress').upsert({
                     user_id: user.id,
-                    module_id: linkedModule.id,
+                    module_id: currentModuleId,
                     simulation_completed: true,
                     current_step: 'done',
                     updated_at: new Date().toISOString()

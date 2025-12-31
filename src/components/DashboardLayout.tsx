@@ -1,11 +1,15 @@
 import { ReactNode } from 'react';
 import { createClient } from '@/utils/supabase/server';
 import { AppSidebar, ModuleStatus } from '@/components/AppSidebar';
-import { THEORY_MODULES } from '@/lib/data/theory';
+
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
+
+    // 0. Fetch All Modules (for Sidebar)
+    const { data: dbModules } = await supabase.from('modules').select('id, title').order('id');
+    const modulesList = dbModules || [];
 
     let userProfile = { name: 'Ospite', level: 'Apprendista', xp: 0, nextLevelXp: 1000 };
     const moduleStatuses: Record<string, ModuleStatus> = {};
@@ -18,7 +22,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
                 name: profile.username || user.email?.split('@')[0] || 'Utente',
                 level: profile.level || 'Apprendista',
                 xp: profile.total_xp || 0,
-                nextLevelXp: 1000 // Placeholder logic, real logic is in gamification.ts but strict calc not needed here
+                nextLevelXp: 1000 // Placeholder logic
             };
         }
 
@@ -29,9 +33,9 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         // Map existing progress
         const progressMap = new Map(progressData?.map(p => [p.module_id, p]) || []);
 
-        THEORY_MODULES.forEach((module, index) => {
+        modulesList.forEach((module, index) => {
             const progress = progressMap.get(module.id);
-            const prevModule = index > 0 ? THEORY_MODULES[index - 1] : null;
+            const prevModule = index > 0 ? modulesList[index - 1] : null;
             const prevProgress = prevModule ? progressMap.get(prevModule.id) : null;
 
             let status: 'locked' | 'in_progress' | 'completed' = 'locked';
@@ -51,7 +55,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         });
     } else {
         // Guest Mode - Unlock first only
-        THEORY_MODULES.forEach((m, i) => {
+        modulesList.forEach((m, i) => {
             moduleStatuses[m.id] = {
                 moduleId: m.id,
                 status: i === 0 ? 'in_progress' : 'locked',
@@ -62,7 +66,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
 
     return (
         <div className="flex min-h-screen bg-neutral-950">
-            <AppSidebar userProfile={userProfile} moduleStatuses={moduleStatuses} />
+            <AppSidebar userProfile={userProfile} moduleStatuses={moduleStatuses} modules={modulesList} />
             <div className="flex-1 lg:pl-72 w-full">
                 {children}
             </div>

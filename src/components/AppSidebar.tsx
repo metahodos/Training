@@ -9,7 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Menu, Lock, CheckCircle2, Circle, Home, BookOpen, Trophy, Link as LinkIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { THEORY_MODULES } from '@/lib/data/theory';
+
 
 export interface ModuleStatus {
     moduleId: string;
@@ -25,13 +25,14 @@ interface AppSidebarProps {
         nextLevelXp: number;
     };
     moduleStatuses: Record<string, ModuleStatus>;
+    modules: { id: string; title: string }[];
 }
 
 interface SidebarContentProps extends AppSidebarProps {
     pathname: string;
 }
 
-const SidebarContent = ({ userProfile, moduleStatuses, pathname }: SidebarContentProps) => (
+const SidebarContent = ({ userProfile, moduleStatuses, pathname, modules }: SidebarContentProps) => (
     <div className="flex flex-col h-full bg-neutral-950 text-white border-r border-neutral-800">
         {/* Branding Header */}
         <div className="p-6 pb-2">
@@ -106,7 +107,7 @@ const SidebarContent = ({ userProfile, moduleStatuses, pathname }: SidebarConten
                     Percorso Formativo
                 </div>
                 <nav className="space-y-1">
-                    {THEORY_MODULES.map((module, index) => {
+                    {(modules || []).map((module, index) => {
                         const status = moduleStatuses[module.id]?.status || (index === 0 ? 'in_progress' : 'locked');
                         const currentStep = moduleStatuses[module.id]?.currentStep || 'theory';
 
@@ -207,7 +208,7 @@ const SidebarContent = ({ userProfile, moduleStatuses, pathname }: SidebarConten
     </div>
 );
 
-export function AppSidebar({ userProfile, moduleStatuses }: AppSidebarProps) {
+export function AppSidebar({ userProfile, moduleStatuses, modules }: AppSidebarProps) {
     const pathname = usePathname();
 
     return (
@@ -225,6 +226,7 @@ export function AppSidebar({ userProfile, moduleStatuses }: AppSidebarProps) {
                             userProfile={userProfile}
                             moduleStatuses={moduleStatuses}
                             pathname={pathname}
+                            modules={modules}
                         />
                     </SheetContent>
                 </Sheet>
@@ -236,6 +238,7 @@ export function AppSidebar({ userProfile, moduleStatuses }: AppSidebarProps) {
                     userProfile={userProfile}
                     moduleStatuses={moduleStatuses}
                     pathname={pathname}
+                    modules={modules}
                 />
             </div>
         </>
