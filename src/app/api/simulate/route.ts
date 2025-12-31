@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
         ];
 
         const completion = await openai.chat.completions.create({
-            model: 'gpt-4o',
+            model: 'gpt-4o-mini',
             messages: messages as Array<{ role: 'system' | 'user' | 'assistant'; content: string }>,
             stream: true,
         });
@@ -83,8 +83,11 @@ export async function POST(req: NextRequest) {
             },
         });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error in simulation:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        return NextResponse.json({
+            error: error.message || 'Internal Server Error',
+            details: error
+        }, { status: 500 });
     }
 }

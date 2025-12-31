@@ -114,6 +114,10 @@ export default function ChatInterface({ scenarioId, initialContext, role }: Simu
         } catch (error) {
             console.error('Error:', error);
             // Handle error visually
+            setMessages(prev => [...prev, {
+                role: 'system',
+                content: '⚠️ Errore di connessione con il Coach AI. Riprova tra poco o verifica la tua connessione.'
+            } as Message]);
         } finally {
             setIsLoading(false);
         }
