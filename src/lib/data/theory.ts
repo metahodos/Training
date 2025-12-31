@@ -16,14 +16,14 @@ export interface TheoryModule {
 export const THEORY_MODULES: TheoryModule[] = [
     {
         id: '101',
-        title: 'Agile Mindset Industriale',
+        title: 'Fondamenta: Mindset Industriale',
         description: 'Dal PUSH al PULL: Rispondere alla complessità (VUCA) in fabbrica.',
         category: 'Fundamentals',
         related_scenario_id: 'scenario_101',
         lessons: [
             {
                 id: '101_1',
-                title: 'Il Contesto Industriale e il mondo VUCA',
+                title: 'Il Mondo VUCA in Fabbrica',
                 content: `
 # Il Contesto Industriale e il mondo VUCA
 
@@ -39,14 +39,14 @@ Non possiamo prevedere il futuro. Fare stock basandosi su previsioni di vendita 
 Un'auto moderna ha milioni di righe di codice e migliaia di componenti. Le interazioni tra reparti (Elettronica, Meccanica, Software) sono non-lineari. Un piccolo ritardo in R&D può bloccare l'intera catena.
 
 ### L'Ambiguità (Ambiguity)
-I dati pueden essere interpretati in modi diversi. "Il cliente vuole qualità" - cosa significa? Durata? Estetica? Funzionalità?
+I dati mogą essere interpretati in modi diversi. "Il cliente vuole qualità" - cosa significa? Durata? Estetica? Funzionalità?
 
 > "Non sopravvive la specie più forte, ma quella più reattiva al cambiamento." - Charles Darwin (adattato al Lean)
                 `
             },
             {
                 id: '101_2',
-                title: 'Mindset Agile vs Tradizionale',
+                title: 'Waterfall vs Agile',
                 content: `
 # Mindset Agile vs Tradizionale (Waterfall)
 
@@ -67,7 +67,7 @@ In produzione, spesso si confonde Agile con "fare le cose più in fretta e male"
             },
             {
                 id: '101_3',
-                title: 'Passaggio dal Modello Push al Modello Pull',
+                title: 'Push vs Pull: La Rivoluzione',
                 content: `
 # Dal PUSH al PULL
 
@@ -95,110 +95,138 @@ La vera rivoluzione copernicana in fabbrica.
     },
     {
         id: '102',
-        title: 'I 3 Pilastri: Trasparenza, Ispezione, Adattamento',
-        description: 'Perché l\'empirismo è fondamentale nella gestione di macchinari complessi.',
+        title: 'I 6 Pilastri QuickWorks',
+        description: 'La struttura portante per team hardware ad alte prestazioni.',
         category: 'Fundamentals',
         related_scenario_id: 'scenario_102',
         lessons: [
             {
                 id: '102_1',
-                title: 'Andon Cord: Trasparenza Radicale',
+                title: 'Pilastro 1: Trasparenza Radicale',
                 content: `
-# Andon Cord
+# 1. Trasparenza Radicale (Visual Management)
 
-In Toyota, ogni operatore ha una corda (Andon) da tirare se vede un problema. Quando tirata, **la linea si ferma**.
+In fabbrica, un problema nascosto diventa presto un disastro.
 
-### Perché fermare tutto?
-Sembra controintuitivo ("stiamo perdendo produzione!"), ma:
-1.  Rende il problema immediatamente **Visibile (Trasparenza)**.
-2.  Costringe a risolvere la **Causa Radice** subito, invece di mettere una pezza e continuare a produrre scarti.
+### Visualizzare il Lavoro
+Se non lo vedi, non puoi gestirlo. Usiamo l'**Obeya Room** o Kanban fisici.
+- **Chi fa cosa?**
+- **Dov'è il collo di bottiglia?**
+- **Chi è bloccato?**
 
-### La Paura della Trasparenza
-In molte aziende tradizionali, fermare la linea è un crimine. Gli operatori nascondono i problemi per paura.
-Agile richiede **Sicurezza Psicologica**: evidenziare un problema è un atto di coraggio premiato, non punito.
+### Andon Cord (Fermare la Linea)
+Dare il potere agli operatori di fermare la linea se vedono un difetto.
+- **Paradosso**: Fermare oggi per correre domani.
+- **Coraggio**: Serve coraggio per segnalare un problema quando si è in ritardo.
+
+> "I problemi sono come funghi: crescono al buio. Accendi la luce."
                 `
             },
             {
                 id: '102_2',
-                title: 'I 3 Pilastri dell\'Empirismo',
+                title: 'Pilastro 2: Empirismo',
                 content: `
-# I 3 Pilastri dell'Empirismo
+# 2. Empirismo
 
-Scrum si fonda sull'Empirismo: la conoscenza deriva dall'esperienza e le decisioni si basano su ciò che si osserva.
+Basta opinioni, servono dati.
+**Scrum** si basa su 3 gambe empiriche:
 
-1.  **Trasparenza**: Le criticità devono essere visibili a tutti (Obeya, Dashboard condivise). Niente report "aggiustati" per il management.
-2.  **Ispezione**: Controllare frequentemente gli artefatti e l'avanzamento verso l'obiettivo per rilevare variazioni indesiderate.
-3.  **Adattamento**: Se l'ispezione mostra che siamo fuori rotta, dobbiamo correggere il processo *immediatamente*.
+1.  **Trasparenza**: Rendi visibili i dati reali (Lead Time, Cycle Time, Difetti).
+2.  **Ispezione**: Controlla frequentemente il prodotto (non il piano) tramite Review reali.
+3.  **Adattamento**: Se i dati dicono che la macchina vibra troppo, CAMBIA i parametri subito. Non aspettare la fine del lotto.
 
-> "Trasparenza senza ispezione è inutile. Ispezione senza adattamento è solo constatazione di decesso."
+> "In Dio ci fidiamo, tutti gli altri portino dati." - W.E. Deming
+                `
+            },
+            {
+                id: '102_3',
+                title: 'Pilastro 3: Flusso (Flow)',
+                content: `
+# 3. Flusso (Flow)
+
+L'obiettivo non è tenere tutti "occupati", ma far scorrere il **Valore** verso il cliente il più velocemente possibile.
+
+### Eliminare gli Sprechi (Muda)
+- **Attese**: Pezzi fermi in attesa di lavorazione.
+- **Movimenti inutili**: Camminare 100 metri per prendere un attrezzo.
+- **Sovrapproduzione**: Fare cose che nessuno ha chiesto ancora.
+
+### Ottimizzare il Sistema, non il Singolo
+Se il reparto tornitura va al 200% ma l'assemblaggio è lento, hai solo creato una montagna di pezzi fermi. Rallenta la tornitura per sincronizzarla.
                 `
             }
         ]
     },
     {
         id: '103',
-        title: 'Obeya Room & Visual Management',
-        description: 'La "War Room" fisica per allineare R&D, Produzione e Qualità.',
-        category: 'Artifacts',
+        title: 'Operatività Agile (Scrum)',
+        description: 'Ruoli e Riti adattati al contesto manifatturiero.',
+        category: 'Roles',
         related_scenario_id: 'scenario_103',
         lessons: [
             {
                 id: '103_1',
-                title: 'Introduzione all\'Obeya',
-                content: '# Intro Obeya\n Placeholder content.' // Keeping short for existing
-            }
-        ]
-    },
-    {
-        id: '104',
-        title: 'Il Valore del Prodotto (PO)',
-        description: 'Dal "Fare tutto" al "Fare ciò che conta". Massimizzare il ROI in fabbrica.',
-        category: 'Roles',
-        related_scenario_id: 'scenario_104',
-        lessons: [
+                title: 'I Ruoli in Tutte Blu',
+                content: `
+# I Ruoli di Scrum in Fabbrica
+
+### 1. Product Owner (PO)
+Non è il "Capo Commessa". È colui che **Massimizza il Valore**.
+- Decide le priorità: "Prima rifare i cablaggi o aggiornare il software?".
+- Parla con i clienti e traduce i bisogni in requisiti per il team.
+
+### 2. Scrum Master (SM)
+È il **Coach del Processo**.
+- Non dà ordini. Rimuove ostacoli.
+- "Mancano i pezzi? Vado io a parlare col magazzino, voi continuate a montare".
+- Protegge il team dalle interferenze esterne.
+
+### 3. Developers (Il Team)
+Non solo programmatori. Sono tornitori, elettricisti, montatori, progettisti.
+- **Autorganizzati**: Decidono LORO "come" fare il lavoro, non il manager.
+                `
+            },
             {
-                id: '104_1',
-                title: 'Ruolo del PO',
-                content: '# Product Owner\n Placeholder content.'
-            }
-        ]
-    },
-    {
-        id: '105',
-        title: 'Prioritizzazione Industriale',
-        description: 'WSJF e Cost of Delay: decidere se investire su nuovi macchinari o manutenzione.',
-        category: 'Roles',
-        lessons: [
+                id: '103_2',
+                title: 'I Riti Fondamentali',
+                content: `
+# I Riti (Cerimonie)
+
+Non sono riunioni noiose, sono momenti di sincronizzazione.
+
+### Daily Scrum (Stand-up)
+- 15 minuti max, in piedi, davanti alla lavagna.
+- "Cosa ho montato ieri? Cosa monto oggi? Ho attrezzi rotti?"
+
+### Sprint Planning
+- Si decide cosa produrre/progettare nelle prossime 2 settimane.
+- Si stima la capacità reale (non i desideri del direttore).
+
+### Sprint Review (La "Demo")
+- Non powerpoint, ma PEZZI FISICI.
+- Si tocca il prototipo, si prova il macchinario.
+- Feedback immediato dagli stakeholder.
+                `
+            },
             {
-                id: '105_1',
-                title: 'WSJF',
-                content: '# WSJF\n Placeholder content.'
-            }
-        ]
-    },
-    {
-        id: '106',
-        title: 'Servant Leadership in Fabbrica (SM)',
-        description: 'Come guidare un team di operai esperti senza dare ordini.',
-        category: 'Roles',
-        lessons: [
-            {
-                id: '106_1',
-                title: 'Servant Leader',
-                content: '# Servant Leader\n Placeholder content.'
-            }
-        ]
-    },
-    {
-        id: '107',
-        title: 'Metriche Lean & Kaizen',
-        description: 'Lead Time, Cycle Time e il ciclo di miglioramento continuo.',
-        category: 'Artifacts',
-        lessons: [
-            {
-                id: '107_1',
-                title: 'Kaizen',
-                content: '# Kaizen\n Placeholder content.'
+                id: '103_3',
+                title: 'Artefatti: DoR e DoD',
+                content: `
+# Definition of Done (DoD)
+
+Quando un pezzo è "Finito"?
+- **Software**: Code committed, tested, deployed.
+- **Hardware**: Pezzo montato, sbavato, verniciato, test elettrico pass, documentazione aggiornata.
+
+Se manca anche solo una vite, NON è "Finito". Non portiamo a valle debiti.
+
+### Definition of Ready (DoR)
+Quando possiamo iniziare a lavorare su un ordine?
+- Materiale disponibile?
+- Disegni approvati?
+- Macchina libera?
+Se no, non iniziamo. Evitiamo di bloccarci a metà.
+                `
             }
         ]
     }

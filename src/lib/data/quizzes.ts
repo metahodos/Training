@@ -48,97 +48,65 @@ export const QUIZZES: ModuleQuiz[] = [
         ]
     },
     {
-        moduleId: '102', // I 3 Pilastri
+        moduleId: '102', // I 6 Pilastri
         questions: [
             {
                 id: 'q102_1',
-                text: 'Cosa rappresenta l\'Andon Cord in un contesto Agile Industriale?',
+                text: 'Cosa rappresenta il Pilastro della "Trasparenza Radicale"?',
                 options: [
-                    { id: 'a', text: 'Un sistema per legare i pacchi spediti.', isCorrect: false },
-                    { id: 'b', text: 'Uno strumento di Trasparenza che permette a chiunque di fermare la linea per segnalare un problema.', isCorrect: true },
-                    { id: 'c', text: 'Un cavo di alimentazione per i robot.', isCorrect: false }
+                    { id: 'a', text: 'Vedere attraverso i muri con i Raggi X.', isCorrect: false },
+                    { id: 'b', text: 'Rendre visibili problemi e flussi (es. Obeya) per poterli gestire subito.', isCorrect: true },
+                    { id: 'c', text: 'Pubblicare gli stipendi di tutti online.', isCorrect: false }
                 ]
             },
             {
                 id: 'q102_2',
-                text: 'Perché fermare la linea (Fermo Linea) è un atto di "Ispezione"?',
+                text: 'In che modo l\'Empirismo differisce dalle opinioni?',
                 options: [
-                    { id: 'a', text: 'Perché permette di esaminare il difetto nel momento in cui si crea, evitando sprechi a valle.', isCorrect: true },
-                    { id: 'b', text: 'Perché permette agli operai di fare pausa caffè.', isCorrect: false },
-                    { id: 'c', text: 'È un atto di sabotaggio, non di ispezione.', isCorrect: false }
+                    { id: 'a', text: 'Non differisce, è un sinonimo.', isCorrect: false },
+                    { id: 'b', text: 'Si basa sull\'ispezione di dati reali e artefatti tangibili per decidere l\'adattamento.', isCorrect: true },
+                    { id: 'c', text: 'L\'empirismo si usa solo in laboratorio.', isCorrect: false }
                 ]
             },
             {
                 id: 'q102_3',
-                text: 'Qual è l\'"Adattamento" dopo aver tirato l\'Andon Cord?',
+                text: 'Cosa si intende per "Flusso" (Flow)?',
                 options: [
-                    { id: 'a', text: 'Risolvere il problema alla radice (es. tarare il macchinario) prima di ripartire.', isCorrect: true },
-                    { id: 'b', text: 'Tagliare il cavo Andon per non sentirlo più suonare.', isCorrect: false },
-                    { id: 'c', text: 'Sgridare l\'operatore che l\'ha tirato.', isCorrect: false }
+                    { id: 'a', text: 'Far scorrere il valore verso il cliente senza interruzioni o sprechi.', isCorrect: true },
+                    { id: 'b', text: 'Far scorrere l\'acqua nei tubi di raffreddamento.', isCorrect: false },
+                    { id: 'c', text: 'Lavorare il più velocemente possibile ignorando la qualità.', isCorrect: false }
                 ]
             }
         ]
     },
     {
-        moduleId: '103',
+        moduleId: '103', // Operations & Roles
         questions: [
             {
                 id: 'q103_1',
-                text: 'Qual è lo scopo principale di una Obeya Room?',
+                text: 'Qual è il ruolo principale dello Scrum Master in fabbrica?',
                 options: [
-                    { id: 'a', text: 'Avere una bella sala per le riunioni con i clienti.', isCorrect: false },
-                    { id: 'b', text: 'Allineare visivamente tutti i dipartimenti su problemi e obiettivi in tempo reale.', isCorrect: true },
-                    { id: 'c', text: 'Nascondere i problemi alla direzione.', isCorrect: false }
+                    { id: 'a', text: 'Assegnare i compiti agli operai.', isCorrect: false },
+                    { id: 'b', text: 'Agire come Coach e rimuovere gli ostacoli che bloccano il team.', isCorrect: true },
+                    { id: 'c', text: 'Controllare gli orari di ingresso.', isCorrect: false }
                 ]
             },
             {
                 id: 'q103_2',
-                text: 'In uno Steering Committee efficace, cosa dovrebbe chiedere un manager?',
+                text: 'A cosa serve la "Definition of Done" (DoD) per un componente hardware?',
                 options: [
-                    { id: 'a', text: 'Di chi è la colpa del ritardo?', isCorrect: false },
-                    { id: 'b', text: 'Cosa vi sta bloccando e come posso aiutarvi?', isCorrect: true },
-                    { id: 'c', text: 'Quando sarà tutto finito al 100%?', isCorrect: false }
+                    { id: 'a', text: 'A sapere quando andare a casa.', isCorrect: false },
+                    { id: 'b', text: 'A garantire che il pezzo sia completo, testato e documentato prima di passare allo step successivo.', isCorrect: true },
+                    { id: 'c', text: 'È un documento burocratico inutile.', isCorrect: false }
                 ]
             },
             {
                 id: 'q103_3',
-                text: 'Se un KPI sul tabellone è "Rosso", qual è l\'atteggiamento corretto?',
+                text: 'Chi partecipa al Daily Stand-up?',
                 options: [
-                    { id: 'a', text: 'Trovare il colpevole.', isCorrect: false },
-                    { id: 'b', text: 'Ignorarlo se nessuno guarda.', isCorrect: false },
-                    { id: 'c', text: 'Ispezionarlo immediatamente come opportunità di miglioramento.', isCorrect: true }
-                ]
-            }
-        ]
-    },
-    {
-        moduleId: '104',
-        questions: [
-            {
-                id: 'q104_1',
-                text: 'Qual è la differenza principale tra Project Manager (Tradizionale) e Product Owner (Agile)?',
-                options: [
-                    { id: 'a', text: 'Il PM comanda, il PO esegue.', isCorrect: false },
-                    { id: 'b', text: 'Il PM si focalizza su Output (Tempi/Costi), il PO su Outcome (Valore/ROI).', isCorrect: true },
-                    { id: 'c', text: 'Nessuna, sono solo nomi diversi.', isCorrect: false }
-                ]
-            },
-            {
-                id: 'q104_2',
-                text: 'Cosa definisce un MVP (Minimum Viable Product) in ambito Hardware?',
-                options: [
-                    { id: 'a', text: 'Un prodotto scadente fatto in fretta.', isCorrect: false },
-                    { id: 'b', text: 'La versione più piccola che permette di validare un\'ipotesi di rischio o valore.', isCorrect: true },
-                    { id: 'c', text: 'Il prodotto finale ma senza verniciatura.', isCorrect: false }
-                ]
-            },
-            {
-                id: 'q104_3',
-                text: 'Se uno stakeholder chiede una feature costosa ma di basso valore, cosa fa il PO?',
-                options: [
-                    { id: 'a', text: 'Dice "No" argomentando con i dati sul ROI.', isCorrect: true },
-                    { id: 'b', text: 'La inserisce nel backlog per non discutere.', isCorrect: false },
-                    { id: 'c', text: 'Chiede al team di fare straordinari.', isCorrect: false }
+                    { id: 'a', text: 'Solo i manager.', isCorrect: false },
+                    { id: 'b', text: 'Tutto il Team di sviluppo (Developers) ed eventualmente SM/PO come ascoltatori.', isCorrect: true },
+                    { id: 'c', text: 'Il cliente finale.', isCorrect: false }
                 ]
             }
         ]
