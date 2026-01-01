@@ -16,14 +16,6 @@ export interface ModuleQuiz {
 
 export const QUIZZES: ModuleQuiz[] = [
     {
-        moduleId: '101',
-        questions: [
-            { id: 'q101_1', text: "Cosa significa V.U.C.A.?", options: [{ id: 'a', text: "Volatile, Uncertain, Complex, Ambiguous", isCorrect: true }, { id: 'b', text: "Very Useful Control Action", isCorrect: false }, { id: 'c', text: "Visual User Centric Agile", isCorrect: false }] },
-            { id: 'q101_2', text: "Qual è la strategia per gestire la 'Complessità'?", options: [{ id: 'a', text: "Fare piani più dettagliati.", isCorrect: false }, { id: 'b', text: "Empirismo (Ispezione e Adattamento).", isCorrect: true }, { id: 'c', text: "Ignorare il problema.", isCorrect: false }] },
-            { id: 'q101_3', text: "Perché i piani quinquennali falliscono oggi?", options: [{ id: 'a', text: "Perché i manager sono pigri.", isCorrect: false }, { id: 'b', text: "A causa della volatilità e rapidità del mercato.", isCorrect: true }, { id: 'c', text: "Perché non usano abbastanza Excel.", isCorrect: false }] }
-        ]
-    },
-    {
         moduleId: '102',
         questions: [
             { id: 'q102_1', text: "Qual è la differenza tra Doing Agile e Being Agile?", options: [{ id: 'a', text: "Nessuna.", isCorrect: false }, { id: 'b', text: "Doing applica solo i riti, Being abbraccia i valori.", isCorrect: true }, { id: 'c', text: "Being Agile è solo per il software.", isCorrect: false }] },

@@ -8,7 +8,7 @@ export default function Home() {
 
   useEffect(() => {
     // Instant client-side redirect to the first module
-    router.replace('/modules/101');
+    router.replace('/modules/102');
   }, [router]);
 
   return (
