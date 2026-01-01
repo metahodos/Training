@@ -45,27 +45,41 @@ export default function SimulationRunner({ scenarioId, moduleId }: { scenarioId:
                         </div>
                     ) : null}
 
-                    {/* Custom message for Module 5 */}
-                    {moduleId && moduleId.includes('mdl-05') || scenarioId && scenarioId.includes("silos") ? (
+                    {/* Custom message for Module 5 (Obeya/Visual) */}
+                    {moduleId === '055c8681-e383-414d-b3ba-115160834540' || (moduleId && moduleId.includes('mdl-05')) || (scenarioId && scenarioId.includes("silos")) ? (
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
                             <p className="text-blue-800 font-medium">Visual Management attivato. La trasparenza è stata ristabilita nell'Obeya Room.</p>
                         </div>
                     ) : null}
 
-                    {/* Custom message for Module 6 */}
-                    {moduleId && moduleId.includes('mdl-06') || scenarioId && scenarioId.includes("management") ? (
+                    {/* Custom message for Module 6 (Management) */}
+                    {moduleId === '6882f3d7-2729-4b1c-b0ea-d8995374ee2d' || (moduleId && moduleId.includes('mdl-06')) || (scenarioId && scenarioId.includes("management")) ? (
                         <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mt-6">
                             <p className="text-purple-800 font-medium">Connessione col Management stabilita. Hai sbloccato la capacità di prendere decisioni strategiche informate.</p>
+                        </div>
+                    ) : null}
+
+                    {/* Custom message for Module 7 (Fail Safe) */}
+                    {moduleId === '399b9b1b-a39f-4066-acab-fa4b2c69a25a' || (moduleId && moduleId.includes('mdl-07')) || (scenarioId && scenarioId.includes("fail-safe")) ? (
+                        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mt-6">
+                            <p className="text-orange-800 font-medium">Fail Safe attivato. Hai trasformato il fallimento in apprendimento e rafforzato l'autonomia del team.</p>
                         </div>
                     ) : null}
 
                     {/* Temporary Demo Complete Button */}
                     <button
                         onClick={async () => {
-                            if (moduleId && moduleId.includes('mdl-05')) {
+                            if (moduleId === '055c8681-e383-414d-b3ba-115160834540' || (moduleId && moduleId.includes('mdl-05'))) {
                                 const { addSkillToProfile } = await import('@/app/actions/profile');
                                 await addSkillToProfile('Visual Management');
                                 alert("Skill 'Visual Management' added to profile!");
+                            }
+                            if (moduleId === '399b9b1b-a39f-4066-acab-fa4b2c69a25a' || (moduleId && moduleId.includes('mdl-07'))) {
+                                const { addSkillToProfile } = await import('@/app/actions/profile');
+                                await addSkillToProfile('Facilitation');
+                                await addSkillToProfile('Conflict Resolution');
+                                await addSkillToProfile('Fail-Safe Management');
+                                alert("Skills 'Facilitation', 'Conflict Resolution', 'Fail-Safe Management' added to profile!");
                             }
                         }}
                         className="mt-4 px-4 py-2 bg-gray-200 text-gray-700 rounded text-xs hover:bg-gray-300"
