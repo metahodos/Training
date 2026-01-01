@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -278,7 +279,11 @@ export default function ChatInterface({ scenarioId, initialContext, role, onComp
                                         ? "bg-blue-600/20 text-blue-50 rounded-tr-none border border-blue-500/30 font-medium"
                                         : "bg-neutral-800 text-gray-100 rounded-tl-none border border-neutral-700"
                                 )}>
-                                    {m.content}
+                                    <div className="prose prose-invert prose-sm max-w-none break-words whitespace-pre-wrap">
+                                        <ReactMarkdown>
+                                            {m.content}
+                                        </ReactMarkdown>
+                                    </div>
                                 </div>
                             </div>
                         ))}
