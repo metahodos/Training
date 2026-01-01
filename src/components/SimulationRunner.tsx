@@ -52,6 +52,13 @@ export default function SimulationRunner({ scenarioId, moduleId }: { scenarioId:
                         </div>
                     ) : null}
 
+                    {/* Custom message for Module 6 */}
+                    {moduleId && moduleId.includes('mdl-06') || scenarioId && scenarioId.includes("management") ? (
+                        <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mt-6">
+                            <p className="text-purple-800 font-medium">Connessione col Management stabilita. Hai sbloccato la capacità di prendere decisioni strategiche informate.</p>
+                        </div>
+                    ) : null}
+
                     {/* Temporary Demo Complete Button */}
                     <button
                         onClick={async () => {
