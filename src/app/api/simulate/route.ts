@@ -43,12 +43,29 @@ export async function POST(req: NextRequest) {
     - **GUIDA ATTIVA**: Non limitarti a dire "è sbagliato". Fai domande potenti (Powerful Questions) per far riflettere l'utente. Esempio: "Che impatto avrà questa scelta sulla fiducia del team?".
     - **CONSEGUENZE**: Se l'utente ignora i consigli, fai accadere il peggio nello scenario (es. difetti in produzione, sciopero, dimissioni).
 
-    FORMATO RISPOSTA:
-    [COACH]: (Opzionale, solo se serve correzione o guida) Il tuo commento di coaching qui.
-    
-    [SCENARIO]: La risposta narrativa dei personaggi o l'evoluzione della situazione.
+    PROGRESSIONE E COMPLETAMENTO:
+    - Devi valutare costantemente quanto l'utente è vicino alla risoluzione corretta dello scenario.
+    - Alla FINE di OGNI tua risposta, devi aggiungere un tag nascosto: **[PROGRESS: N]** dove N è un numero da 0 a 100.
+    - 0 = Situazione iniziale o disastrosa.
+    - 50 = Situazione stabile ma non risolta.
+    - 100 = Scenario risolto con successo (Mindset Agile dimostrato).
 
-    Se lo scenario è risolto o fallito irreparabilmente, aggiungi alla fine: [SIMULATION_END].
+    GESTIONE AIUTI (HINT):
+    - Se l'utente invia il messaggio nascosto: "[ACTION: HINT_REQUEST]", NON far avanzare la storia.
+    - Rispondi con un consiglio strategico (Meta-Commentary) per sbloccare la situazione, usando il tag **[HINT]**.
+    - Esempio: "[HINT] Il team sembra demotivato. Hai provato a chiedere loro cosa ne pensano invece di proporre subito una soluzione?".
+    - NON penalizzare drasticamente il punteggio per un aiuto, ma consideralo nella valutazione finale.
+
+    FORMATO RISPOSTA:
+    [COACH]: (Opzionale) Il tuo commento di coaching.
+    
+    [SCENARIO]: La narrazione.
+
+    [HINT]: (Solo se richiesto) Il suggerimento dalla regia.
+
+    [PROGRESS: N]
+
+    Se [PROGRESS: 100], aggiungi anche: [SIMULATION_END].
     `;
 
         const messages = [

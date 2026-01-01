@@ -13,6 +13,7 @@ export interface Database {
                 Row: {
                     id: string
                     username: string | null
+                    role: 'user' | 'facilitator' | 'admin' // Added in Phase 2
                     role_preference: 'SM' | 'PO' | null
                     xp_points: number // legacy field, we are using total_xp now but keeping it for safety
                     total_xp: number
@@ -36,6 +37,46 @@ export interface Database {
                     total_xp?: number
                     level?: 'Apprendista' | 'Capo Reparto' | 'Value Stream Architect' | 'Master of Flow'
                     created_at?: string
+                }
+            }
+            global_config: {
+                Row: {
+                    key: string
+                    value: Json
+                    updated_at: string
+                }
+                Insert: {
+                    key: string
+                    value: Json
+                    updated_at?: string
+                }
+                Update: {
+                    key?: string
+                    value?: Json
+                    updated_at?: string
+                }
+            }
+            team_scores: {
+                Row: {
+                    id: string
+                    team_name: string
+                    pillar_id: string
+                    score: number
+                    updated_at: string
+                }
+                Insert: {
+                    id?: string
+                    team_name: string
+                    pillar_id: string
+                    score?: number
+                    updated_at?: string
+                }
+                Update: {
+                    id?: string
+                    team_name?: string
+                    pillar_id?: string
+                    score?: number
+                    updated_at?: string
                 }
             }
             user_badges: {
