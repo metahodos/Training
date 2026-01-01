@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 
 import { CheckCircle2, XCircle, AlertTriangle, Trophy } from 'lucide-react';
@@ -93,9 +94,11 @@ export default function AssessmentView({ score, feedback, onRetry, badge }: Asse
                             <AlertTriangle className="text-yellow-500" size={18} />
                             Analisi dell&apos;IA
                         </h3>
-                        <p className="text-sm text-gray-300 leading-relaxed">
-                            {feedback.analisi_critica}
-                        </p>
+                        <div className="text-sm text-gray-300 leading-relaxed prose prose-invert max-w-none">
+                            <ReactMarkdown>
+                                {feedback.analisi_critica}
+                            </ReactMarkdown>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

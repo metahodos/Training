@@ -3,6 +3,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { calculateQuizScore } from '@/lib/scoring';
 
 
 export async function markTheoryCompleted(moduleId: string) {
@@ -71,13 +72,7 @@ export async function submitQuiz(moduleId: string, answers: { questionId: string
         const previousAttempts = currentProgress?.quiz_attempts || 0;
         const newAttempts = previousAttempts + 1;
 
-        let points = 0;
-        if (passed) {
-            if (newAttempts === 1) points = 10;
-            else if (newAttempts === 2) points = 7;
-            else if (newAttempts === 3) points = 4;
-            else points = 0;
-        }
+        const points = passed ? calculateQuizScore(newAttempts) : 0;
 
         const updateData: {
             user_id: string;

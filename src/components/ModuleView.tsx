@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
+import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CheckCircle2, Lock, PlayCircle, BookOpen, BrainCircuit, ChevronRight } from 'lucide-react';
@@ -216,7 +217,11 @@ export default function ModuleView({ moduleId, moduleTitle, lessons, quiz, scena
                                         <span className="text-blue-500/50">#{currentLessonIndex + 1}</span>
                                         {currentLesson.title}
                                     </h2>
-                                    <div dangerouslySetInnerHTML={{ __html: currentLesson.content }} />
+                                    <div className="prose prose-invert prose-sm max-w-none text-gray-300 break-words whitespace-pre-wrap">
+                                        <ReactMarkdown>
+                                            {currentLesson.content.replace(/\\n/g, '\n')}
+                                        </ReactMarkdown>
+                                    </div>
                                 </article>
                             </ScrollArea>
 

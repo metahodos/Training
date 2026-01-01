@@ -3,6 +3,7 @@
 import { OpenAI } from 'openai';
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { calculateSimulationScore } from '@/lib/scoring';
 
 
 const openai = new OpenAI({
@@ -101,11 +102,7 @@ Struttura:
                 const currentModuleId = scenarioData.module_id;
 
                 // Calculate Simulation Score based on hints
-                let simulationPoints = 0;
-                if (hintsUsed === 0) simulationPoints = 10;
-                else if (hintsUsed === 1) simulationPoints = 7;
-                else if (hintsUsed === 2) simulationPoints = 4;
-                else simulationPoints = 1;
+                const simulationPoints = calculateSimulationScore(hintsUsed);
 
                 // Calculate Total Score for Badge
                 // Fetch Quiz Score
