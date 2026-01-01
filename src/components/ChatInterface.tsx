@@ -39,7 +39,7 @@ import { Progress } from "@/components/ui/progress";
 // ... existing imports
 
 export default function ChatInterface({ scenarioId, initialContext, role, onComplete }: SimulatorProps) {
-    const [messages, setMessages] = useState<Message[]>([
+    const [messages, setMessages] = useState<Message[]>(() => [
         { role: 'assistant', content: initialContext }
     ]);
     const [input, setInput] = useState('');
@@ -240,23 +240,23 @@ export default function ChatInterface({ scenarioId, initialContext, role, onComp
     }
 
     return (
-        <Card className="flex flex-col h-[600px] w-full max-w-4xl mx-auto bg-neutral-900 border-neutral-800 text-white shadow-2xl">
-            <CardHeader className="border-b border-neutral-800 pb-4">
+        <div className="flex flex-col h-full w-full bg-neutral-900/50">
+            <div className="border-b border-neutral-800 pb-4 p-4 shrink-0">
                 <div className="flex items-center justify-between mb-2">
-                    <CardTitle className="text-lg font-mono flex items-center gap-2">
+                    <h3 className="text-lg font-mono flex items-center gap-2 text-white">
                         <BotIcon className="w-5 h-5 text-green-400" />
                         Simulazione: Scenario {role}
-                    </CardTitle>
+                    </h3>
                     <span className="text-xs text-neutral-500 font-mono">
                         Progress: {progress}%
                     </span>
                 </div>
                 {/* [NEW] Progress Bar */}
                 <Progress value={progress} className="h-2 bg-neutral-800" indicatorClassName="bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-500" />
-            </CardHeader>
+            </div>
 
-            <CardContent className="flex-1 p-0 flex flex-col overflow-hidden relative">
-                <ScrollArea className="flex-1 p-4">
+            <div className="flex-1 min-h-0 flex flex-col p-4 overflow-hidden relative">
+                <ScrollArea className="flex-1 h-full pr-4">
                     <div className="space-y-4 pb-4">
                         {messages.map((m, i) => (
                             <div
@@ -319,7 +319,7 @@ export default function ChatInterface({ scenarioId, initialContext, role, onComp
                         </Button>
                     </form>
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 }
