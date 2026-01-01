@@ -14,7 +14,7 @@ interface SimulationHistory {
     content: string;
 }
 
-export async function processSimulationResult(history: SimulationHistory[], scenarioId: string) {
+export async function processSimulationResult(history: SimulationHistory[], scenarioId: string, hintsUsed: number = 0) {
     const supabase = await createClient();
 
     // 1. Validate User
@@ -88,8 +88,8 @@ Struttura:
             await supabase.from('profiles').update({ xp_points: (profile.xp_points || 0) + xpGained }).eq('id', user.id);
         }
 
-        // 5. Update Module Progress (Unlock Next Module)
-        if (feedbackData.punteggio_globale > 70) {
+        // 5. Update Module Progress (Unlock Next Module & Award Badge)
+        if (feedbackData.punteggio_globale >= 75) { // Updated threshold to 75%
             // Find which module this scenario belongs to
             const { data: scenarioData } = await supabase
                 .from('scenarios')
@@ -100,16 +100,52 @@ Struttura:
             if (scenarioData && scenarioData.module_id) {
                 const currentModuleId = scenarioData.module_id;
 
-                // Mark current as done
+                // Calculate Simulation Score based on hints
+                let simulationPoints = 0;
+                if (hintsUsed === 0) simulationPoints = 10;
+                else if (hintsUsed === 1) simulationPoints = 7;
+                else if (hintsUsed === 2) simulationPoints = 4;
+                else simulationPoints = 1;
+
+                // Calculate Total Score for Badge
+                // Fetch Quiz Score
+                const { data: progressData } = await supabase
+                    .from('user_progress')
+                    .select('quiz_score, mastery_score') // Assuming mastery_score is set elsewhere or default
+                    .eq('user_id', user.id)
+                    .eq('module_id', currentModuleId)
+                    .single();
+
+                const quizPoints = progressData?.quiz_score || 0;
+                const masteryPoints = 10; // Default mastery points for completion
+
+                const totalScore = masteryPoints + quizPoints + simulationPoints;
+                const badgeType = totalScore >= 25 ? 'GOLD' : (totalScore >= 20 ? 'SILVER' : 'BRONZE');
+
+                // Update Progress with Score and Badge
                 await supabase.from('user_progress').upsert({
                     user_id: user.id,
                     module_id: currentModuleId,
                     simulation_completed: true,
+                    simulation_score: simulationPoints,
+                    mastery_score: masteryPoints,
+                    total_module_score: totalScore,
+                    badge_awarded: true,
                     current_step: 'done',
                     updated_at: new Date().toISOString()
                 }, { onConflict: 'user_id, module_id' });
 
+                // Insert Badge Record
+                await supabase.from('user_badges').insert({
+                    user_id: user.id,
+                    module_id: currentModuleId,
+                    badge_type: badgeType,
+                    score: totalScore
+                });
+
                 revalidatePath('/', 'layout'); // Refresh Sidebar to unlock next module
+
+                return { success: true, feedback: feedbackData, badge: { type: badgeType, score: totalScore } };
             }
         }
 

@@ -96,7 +96,11 @@ export interface Database {
                     id?: string
                     user_id?: string
                     badge_type?: string
+                    badge_type?: string
                     awarded_at?: string
+                    module_id?: string
+                    score?: number
+                    metadata?: Json
                 }
             }
             scenarios: {
@@ -137,6 +141,13 @@ export interface Database {
                     quiz_passed: boolean
                     simulation_completed: boolean
                     current_step: 'theory' | 'quiz' | 'practice' | 'done' | null
+                    // New Scoring Fields
+                    quiz_score?: number
+                    quiz_attempts?: number
+                    simulation_score?: number
+                    mastery_score?: number
+                    total_module_score?: number
+                    badge_awarded?: boolean
                     updated_at: string
                     last_accessed_at: string | null
                 }
@@ -159,6 +170,13 @@ export interface Database {
                     quiz_passed?: boolean
                     simulation_completed?: boolean
                     current_step?: 'theory' | 'quiz' | 'practice' | 'done' | null
+                    // New Scoring Fields
+                    quiz_score?: number
+                    quiz_attempts?: number
+                    simulation_score?: number
+                    mastery_score?: number
+                    total_module_score?: number
+                    badge_awarded?: boolean
                     updated_at?: string
                     last_accessed_at?: string | null
                 }

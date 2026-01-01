@@ -19,6 +19,7 @@ interface SimulatorProps {
     scenarioId: string;
     initialContext: string;
     role: 'SM' | 'PO';
+    onComplete?: (feedback: FeedbackData, badge?: { type: string, score: number }) => void;
 }
 
 import { processSimulationResult } from '@/app/actions/simulation';
@@ -36,14 +37,16 @@ import { Progress } from "@/components/ui/progress";
 
 // ... existing imports
 
-export default function ChatInterface({ scenarioId, initialContext, role }: SimulatorProps) {
+export default function ChatInterface({ scenarioId, initialContext, role, onComplete }: SimulatorProps) {
     const [messages, setMessages] = useState<Message[]>([
         { role: 'assistant', content: initialContext }
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [feedback, setFeedback] = useState<FeedbackData | null>(null);
-    const [progress, setProgress] = useState(0); // [NEW] Progress State
+    const [badge, setBadge] = useState<{ type: string, score: number } | undefined>(undefined);
+    const [progress, setProgress] = useState(0);
+    const [hintsUsed, setHintsUsed] = useState(0);
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -55,11 +58,16 @@ export default function ChatInterface({ scenarioId, initialContext, role }: Simu
     const generateFeedback = async (history: Message[]) => {
         setIsLoading(true);
         try {
-            const simpleHistory = history.map(m => ({ role: m.role, content: m.content }));
-            const result = await processSimulationResult(simpleHistory, scenarioId);
+            const simpleHistory = history.map(({ role, content }) => ({ role, content }));
+            const result = await processSimulationResult(simpleHistory, scenarioId, hintsUsed);
 
             if (result.success && result.feedback) {
                 setFeedback(result.feedback);
+                if (result.badge) setBadge(result.badge);
+
+                if (onComplete) {
+                    onComplete(result.feedback, result.badge);
+                }
             } else {
                 console.error("Feedback error:", result.error);
                 setFeedback({
@@ -165,6 +173,7 @@ export default function ChatInterface({ scenarioId, initialContext, role }: Simu
         setIsLoading(true);
 
         try {
+            setHintsUsed((prev) => prev + 1);
             const response = await fetch('/api/simulate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -197,7 +206,7 @@ export default function ChatInterface({ scenarioId, initialContext, role }: Simu
                     setProgress(newProgress);
                 }
 
-                let displayMessage = assistantMessage
+                const displayMessage = assistantMessage
                     .replace(/\[PROGRESS:\s*\d+\]/g, '')
                     .replace('[SIMULATION_END]', '')
                     .replace('[HINT]', '💡 SUGGERIMENTO DALLA REGIA:\n');
@@ -223,6 +232,7 @@ export default function ChatInterface({ scenarioId, initialContext, role }: Simu
             <AssessmentView
                 score={feedback.punteggio_globale}
                 feedback={feedback}
+                badge={badge}
                 onRetry={() => window.location.reload()}
             />
         );

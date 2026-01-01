@@ -1,10 +1,7 @@
 
-import { THEORY_MODULES } from '@/lib/data/theory';
-import { QUIZZES } from '@/lib/data/quizzes';
-import { INITIAL_SCENARIOS } from '@/lib/data/scenarios';
 import { getModuleProgress } from '@/app/actions/progress';
 import ModuleView from '@/components/ModuleView';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -34,7 +31,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
     // 3. Prepare Data for View
     // Sort lessons by order_index just in case
-    const sortedLessons = (moduleData.lessons || []).sort((a: any, b: any) => a.order_index - b.order_index);
+    const sortedLessons = (moduleData.lessons || []).sort((a: { order_index: number }, b: { order_index: number }) => a.order_index - b.order_index);
 
     // Quiz Data: The DB stores questions as rows in 'quizzes' table.
     // We expect 'quizzes' related rows to be joined here.
@@ -47,7 +44,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
     let quizDataForView = undefined;
     if (moduleData.quizzes && Array.isArray(moduleData.quizzes) && moduleData.quizzes.length > 0) {
-        const questions = moduleData.quizzes.map((q: any) => {
+        const questions = moduleData.quizzes.map((q: { options: string[], correct_answer: string, id: string, question: string }) => {
             // DB: options is string[], correct_answer is string
             // View: options is { id, text, isCorrect }[]
             const options = Array.isArray(q.options)

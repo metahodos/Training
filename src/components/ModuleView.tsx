@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
 import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { CheckCircle2, Lock, PlayCircle, BookOpen, BrainCircuit, ChevronRight, FileText } from 'lucide-react';
+import { CheckCircle2, Lock, PlayCircle, BookOpen, BrainCircuit, ChevronRight } from 'lucide-react';
 import ChatInterface from '@/components/ChatInterface';
 import { markTheoryCompleted, submitQuiz } from '@/app/actions/progress';
 import { cn } from '@/lib/utils';
@@ -72,7 +71,7 @@ export default function ModuleView({ moduleId, moduleTitle, lessons, quiz, scena
     }, [initialProgress, lessons]);
 
     const currentLesson = lessons[currentLessonIndex];
-    const allLessonsRead = lessons.every(l => readLessons.has(l.id));
+
 
     // --- LOGIC: Unlocking & Persistence ---
 
@@ -201,7 +200,7 @@ export default function ModuleView({ moduleId, moduleTitle, lessons, quiz, scena
                                                 isActive ? "bg-blue-500/10 text-blue-300 font-medium" : "text-neutral-400 hover:bg-white/5 hover:text-neutral-200"
                                             )}
                                         >
-                                            <span className="truncate pr-2">{idx + 1}. {lesson.title}</span>
+                                            <span className="whitespace-normal break-words pr-2 text-left leading-tight">{idx + 1}. {lesson.title}</span>
                                             {isRead && <CheckCircle2 size={12} className="text-green-500 shrink-0" />}
                                         </button>
                                     );
@@ -217,7 +216,7 @@ export default function ModuleView({ moduleId, moduleTitle, lessons, quiz, scena
                                         <span className="text-blue-500/50">#{currentLessonIndex + 1}</span>
                                         {currentLesson.title}
                                     </h2>
-                                    <ReactMarkdown>{currentLesson.content}</ReactMarkdown>
+                                    <div dangerouslySetInnerHTML={{ __html: currentLesson.content }} />
                                 </article>
                             </ScrollArea>
 

@@ -7,8 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { Menu, Lock, CheckCircle2, Circle, Home, BookOpen, Trophy, Link as LinkIcon } from 'lucide-react';
+import { Menu, Lock, CheckCircle2, Circle, Home, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 
@@ -151,6 +150,7 @@ export function AppSidebar({ userProfile, moduleStatuses, modules }: AppSidebarP
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsMounted(true);
     }, []);
 

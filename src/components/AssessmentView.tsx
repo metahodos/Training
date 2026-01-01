@@ -4,8 +4,9 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-import { CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, XCircle, AlertTriangle, Trophy } from 'lucide-react';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
 interface AssessmentProps {
     score: number;
@@ -18,9 +19,10 @@ interface AssessmentProps {
         aree_miglioramento: string[];
     };
     onRetry: () => void;
+    badge?: { type: string; score: number };
 }
 
-export default function AssessmentView({ score, feedback, onRetry }: AssessmentProps) {
+export default function AssessmentView({ score, feedback, onRetry, badge }: AssessmentProps) {
     return (
         <div className="w-full max-w-2xl mx-auto space-y-6 animate-in fade-in zoom-in duration-500">
             <Card className="bg-neutral-900 border-neutral-800 text-white overflow-hidden">
@@ -63,6 +65,27 @@ export default function AssessmentView({ score, feedback, onRetry }: AssessmentP
                             <span className="absolute text-4xl font-bold">{score}</span>
                         </div>
                     </div>
+
+                    {/* Badge Display */}
+                    {badge && (
+                        <div className="flex flex-col items-center justify-center p-6 bg-neutral-800/30 rounded-xl border border-neutral-700/50 animate-in zoom-in slide-in-from-bottom-5 duration-700 delay-300">
+                            <div className="relative">
+                                <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full animate-pulse" />
+                                <Trophy className={`w-16 h-16 ${badge.type === 'GOLD' ? 'text-yellow-400' : badge.type === 'SILVER' ? 'text-gray-300' : 'text-amber-700'} relative z-10 drop-shadow-lg`} />
+                            </div>
+                            <h3 className="mt-4 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-200 to-yellow-500">
+                                {badge.type === 'GOLD' ? 'Agile Master' : badge.type === 'SILVER' ? 'Agile Practitioner' : 'Agile Explorer'}
+                            </h3>
+                            <div className="flex gap-2 mt-2">
+                                <Badge variant="outline" className="border-yellow-500/30 text-yellow-500 bg-yellow-500/10">
+                                    {badge.score} Punti Totali
+                                </Badge>
+                                <Badge variant="outline" className="border-blue-500/30 text-blue-400 bg-blue-500/10">
+                                    Badge {badge.type}
+                                </Badge>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Analysis */}
                     <div className="bg-neutral-800/50 p-4 rounded-lg border border-neutral-700">

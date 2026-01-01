@@ -59,16 +59,52 @@ export async function submitQuiz(moduleId: string, answers: { questionId: string
 
     const passed = correctCount === totalQuestions;
 
-    // Only save progress if user is authenticated
-    if (user && passed) {
-        await supabase.from('user_progress').upsert({
+    if (user) {
+        // Fetch existing attempts
+        const { data: currentProgress } = await supabase
+            .from('user_progress')
+            .select('quiz_attempts')
+            .eq('user_id', user.id)
+            .eq('module_id', moduleId)
+            .single();
+
+        const previousAttempts = currentProgress?.quiz_attempts || 0;
+        const newAttempts = previousAttempts + 1;
+
+        let points = 0;
+        if (passed) {
+            if (newAttempts === 1) points = 10;
+            else if (newAttempts === 2) points = 7;
+            else if (newAttempts === 3) points = 4;
+            else points = 0;
+        }
+
+        const updateData: any = {
             user_id: user.id,
             module_id: moduleId,
-            quiz_passed: true,
+            quiz_attempts: newAttempts,
             updated_at: new Date().toISOString()
-        }, { onConflict: 'user_id, module_id' });
+        };
 
-        revalidatePath('/', 'layout'); // Refresh Sidebar
+        if (passed) {
+            updateData.quiz_passed = true;
+            updateData.quiz_score = points;
+        }
+
+        await supabase.from('user_progress').upsert(updateData, { onConflict: 'user_id, module_id' });
+
+        if (passed) {
+            revalidatePath('/', 'layout'); // Refresh Sidebar
+        }
+
+        return {
+            success: true,
+            passed,
+            score: correctCount,
+            total: totalQuestions,
+            pointsEarned: points,
+            attempts: newAttempts
+        };
     }
 
     return {
