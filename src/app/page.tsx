@@ -13,10 +13,15 @@ export default async function Dashboard() {
   const { data: { user } } = await supabase.auth.getUser();
 
   // Fetch Modules
-  const { data: modules } = await supabase
+  const { data: modules, error } = await supabase
     .from('modules')
     .select('*')
     .order('sort_order', { ascending: true });
+
+  if (error) {
+    console.error("Error fetching modules:", error);
+    return <div>Error loading modules: {error.message}</div>;
+  }
 
   if (!modules) return <div>Loading modules...</div>;
 
