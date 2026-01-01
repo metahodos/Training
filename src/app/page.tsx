@@ -15,12 +15,17 @@ export default async function Dashboard() {
   // Fetch Modules
   const { data: modules, error } = await supabase
     .from('modules')
-    .select('*')
-    .order('sort_order', { ascending: true });
+    .select('*');
+  // .order('sort_order', { ascending: true }); // DISABLED TEMPORARILY DEBUG
 
   if (error) {
     console.error("Error fetching modules:", error);
-    return <div>Error loading modules: {error.message}</div>;
+    // Explicit error message
+    return <div className="p-4 text-red-500">
+      <h2 className="font-bold">Database Error</h2>
+      <p>{error.message}</p>
+      <pre className="mt-2 bg-gray-100 p-2 text-xs">{JSON.stringify(error, null, 2)}</pre>
+    </div>;
   }
 
   if (!modules) return <div>Loading modules...</div>;
