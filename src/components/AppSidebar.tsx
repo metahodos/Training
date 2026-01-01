@@ -86,20 +86,7 @@ const SidebarContent = ({ userProfile, moduleStatuses, pathname, modules }: Side
                             Dashboard
                         </Button>
                     </Link>
-                    <Link href="/pills">
-                        <Button
-                            variant="ghost"
-                            className={cn(
-                                "w-full justify-start text-sm font-medium transition-all duration-200",
-                                pathname === "/pills"
-                                    ? "bg-blue-600/10 text-blue-400 border border-blue-600/20 shadow-[0_0_15px_-3px_rgba(59,130,246,0.3)]"
-                                    : "text-gray-400 hover:text-white hover:bg-neutral-900"
-                            )}
-                        >
-                            <BookOpen className="mr-3 h-4 w-4" />
-                            Libreria Teoria
-                        </Button>
-                    </Link>
+
                 </nav>
             </div>
 
