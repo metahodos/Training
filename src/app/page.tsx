@@ -1,65 +1,89 @@
-'use client';
+import { createClient } from "@/utils/supabase/server";
+import { Lock, Unlock, PlayCircle } from "lucide-react";
+import Link from "next/link";
+import { checkModuleUnlock } from "@/lib/unlocking";
 
-import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Bot, Users } from 'lucide-react';
+// Force dynamic rendering to check auth and locks
+export const dynamic = 'force-dynamic';
 
-export default function Home() {
+export default async function Dashboard() {
+  const supabase = await createClient();
+
+  // Get user
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Fetch Modules
+  const { data: modules } = await supabase
+    .from('modules')
+    .select('*')
+    .order('sort_order', { ascending: true });
+
+  if (!modules) return <div>Loading modules...</div>;
+
+  // Determine lock status for each module
+  // Optimization: Parallelize unlock checks
+  const modulesWithStatus = await Promise.all(modules.map(async (m) => {
+    let isUnlocked = false;
+    if (user) {
+      const { unlocked } = await checkModuleUnlock(user.id, m.id);
+      isUnlocked = unlocked;
+    } else {
+      // Unauthenticated: Only Module 1 unlocked? Or none?
+      // "Tabula Rasa" -> Reset Auth? I assume user needs to sign in?
+      // If no user, show lock except module 1 maybe?
+      isUnlocked = m.sort_order === 1;
+    }
+    return { ...m, isUnlocked };
+  }));
+
   return (
-    <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center p-4">
-      <div className="mb-12 text-center space-y-2">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tighter bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
-          Agile Pro Coach
-        </h1>
-        <p className="text-neutral-400 text-sm md:text-base uppercase tracking-widest">
-          Scegli il tuo percorso formativo
-        </p>
-      </div>
+    <div className="space-y-8">
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Your Agile Journey</h1>
+        <p className="text-gray-600 dark:text-gray-400">Master the 6 Pillars of QuickWorks.</p>
+      </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full">
-        {/* Card 1: Simulazioni AI */}
-        <Link href="/modules/102" className="group">
-          <Card className="h-full bg-neutral-900 border-neutral-800 hover:border-blue-500/50 transition-all duration-300 hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.2)]">
-            <CardHeader>
-              <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Bot className="w-6 h-6 text-blue-400" />
-              </div>
-              <CardTitle className="text-2xl text-white group-hover:text-blue-400 transition-colors">
-                Simulazioni AI
-              </CardTitle>
-              <CardDescription className="text-neutral-400">
-                Affronta scenari realistici con coach virtuali, quiz e percorsi di apprendimento individuali.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xs font-mono text-blue-500/80 uppercase tracking-wider">
-                Percorso Individuale
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {modulesWithStatus.map((m) => (
+          <div key={m.id} className={`group relative bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all hover:shadow-md ${!m.isUnlocked ? 'opacity-75 grayscale' : ''}`}>
+            <div className={`absolute top-0 left-0 w-full h-1 ${m.isUnlocked ? 'bg-green-500' : 'bg-gray-300'}`} />
 
-        {/* Card 2: Formazione Esperienziale */}
-        <Link href="/experiential" className="group">
-          <Card className="h-full bg-neutral-900 border-neutral-800 hover:border-green-500/50 transition-all duration-300 hover:shadow-[0_0_30px_-5px_rgba(34,197,94,0.2)]">
-            <CardHeader>
-              <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Users className="w-6 h-6 text-green-400" />
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                  Module {m.sort_order}
+                </span>
+                {m.isUnlocked ? (
+                  <Unlock className="w-5 h-5 text-green-500" />
+                ) : (
+                  <Lock className="w-5 h-5 text-gray-400" />
+                )}
               </div>
-              <CardTitle className="text-2xl text-white group-hover:text-green-400 transition-colors">
-                Formazione Esperienziale
-              </CardTitle>
-              <CardDescription className="text-neutral-400">
-                Attività di team, leaderboard in tempo reale e giochi interattivi (Marshmallow, Puzzle, Lego).
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xs font-mono text-green-500/80 uppercase tracking-wider">
-                Percorso di Team
+
+              <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">
+                {m.title}
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">
+                {m.description}
+              </p>
+
+              <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
+                <span className="text-xs text-gray-400 font-medium">
+                  Day {m.day} • {m.pillar}
+                </span>
+                {m.isUnlocked ? (
+                  <Link href={`/modules/${m.id}`} className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700">
+                    Start <PlayCircle className="w-4 h-4 ml-1" />
+                  </Link>
+                ) : (
+                  <span className="text-sm text-gray-400 flex items-center cursor-not-allowed">
+                    Locked
+                  </span>
+                )}
               </div>
-            </CardContent>
-          </Card>
-        </Link>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
