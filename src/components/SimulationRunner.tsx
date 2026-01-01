@@ -45,9 +45,30 @@ export default function SimulationRunner({ scenarioId, moduleId }: { scenarioId:
                         </div>
                     ) : null}
 
+                    {/* Custom message for Module 5 */}
+                    {moduleId && moduleId.includes('mdl-05') || scenarioId && scenarioId.includes("silos") ? (
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+                            <p className="text-blue-800 font-medium">Visual Management attivato. La trasparenza è stata ristabilita nell'Obeya Room.</p>
+                        </div>
+                    ) : null}
+
+                    {/* Temporary Demo Complete Button */}
+                    <button
+                        onClick={async () => {
+                            if (moduleId && moduleId.includes('mdl-05')) {
+                                const { addSkillToProfile } = await import('@/app/actions/profile');
+                                await addSkillToProfile('Visual Management');
+                                alert("Skill 'Visual Management' added to profile!");
+                            }
+                        }}
+                        className="mt-4 px-4 py-2 bg-gray-200 text-gray-700 rounded text-xs hover:bg-gray-300"
+                    >
+                        [DEV: Sync Result / Add Skill]
+                    </button>
+
                     <button
                         onClick={() => router.push(`/modules/${moduleId}`)}
-                        className="mt-8 text-sm text-indigo-600 hover:underline"
+                        className="mt-8 text-sm text-indigo-600 hover:underline block mx-auto"
                     >
                         Return to Module
                     </button>

@@ -140,6 +140,18 @@ Struttura:
                     score: totalScore
                 });
 
+                // Auto-add skill for Module 5
+                // Assuming Module 5 ID is '5' or sorted 5th. Ideally, check sort_order.
+                // For now, based on context, we can check if scenario is related to Obeya/Module 5
+                // But a safer bet is to do it in the UI or here if we fetch module details.
+                // Let's rely on the separate action for now or add it if we know the module.
+                // If this is Module 5 (Obeya), add 'Visual Management'
+                const { data: moduleInfo } = await supabase.from('modules').select('sort_order').eq('id', currentModuleId).single();
+                if (moduleInfo && moduleInfo.sort_order === 5) {
+                    const { addSkillToProfile } = await import('./profile');
+                    await addSkillToProfile('Visual Management');
+                }
+
                 revalidatePath('/', 'layout'); // Refresh Sidebar to unlock next module
 
                 return { success: true, feedback: feedbackData, badge: { type: badgeType, score: totalScore } };

@@ -108,20 +108,20 @@ export default async function ModulePage({ params }: { params: Promise<{ id: str
                     </h2>
                     <div className="grid gap-4">
                         {scenarios.map(sc => (
-                            <div key={sc.id} className="bg-gradient-to-r from-indigo-50 to-white dark:from-indigo-900/20 dark:to-gray-800 p-6 rounded-xl border border-indigo-100 dark:border-indigo-800 shadow-sm">
+                            <div key={sc.id} className={`p-6 rounded-xl border shadow-sm ${moduleData.sort_order === 5 ? 'bg-gray-900 border-gray-800 text-white' : 'bg-gradient-to-r from-indigo-50 to-white dark:from-indigo-900/20 dark:to-gray-800 border-indigo-100 dark:border-indigo-800'}`}>
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <h3 className="font-bold text-lg text-indigo-900 dark:text-indigo-100">{sc.title}</h3>
-                                        <p className="text-sm text-indigo-700 dark:text-indigo-300 mt-1">{sc.description}</p>
+                                        <h3 className={`font-bold text-lg ${moduleData.sort_order === 5 ? 'text-green-400' : 'text-indigo-900 dark:text-indigo-100'}`}>{sc.title}</h3>
+                                        <p className={`text-sm mt-1 ${moduleData.sort_order === 5 ? 'text-gray-300' : 'text-indigo-700 dark:text-indigo-300'}`}>{sc.description}</p>
                                     </div>
-                                    <span className="text-xs bg-white dark:bg-gray-900 px-2 py-1 rounded border border-indigo-200 dark:border-indigo-700 shadow-sm">
+                                    <span className={`text-xs px-2 py-1 rounded border shadow-sm ${moduleData.sort_order === 5 ? 'bg-gray-800 border-gray-700 text-green-400' : 'bg-white dark:bg-gray-900 border-indigo-200 dark:border-indigo-700'}`}>
                                         {sc.difficulty}
                                     </span>
                                 </div>
                                 <div className="mt-4">
-                                    <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-not-allowed opacity-50" title="Not implemented in this view yet">
+                                    <Link href={`/modules/${id}/simulation/${sc.id}`} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-block ${moduleData.sort_order === 5 ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}>
                                         Launch Simulation
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         ))}
