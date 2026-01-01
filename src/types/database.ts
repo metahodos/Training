@@ -96,7 +96,6 @@ export interface Database {
                     id?: string
                     user_id?: string
                     badge_type?: string
-                    badge_type?: string
                     awarded_at?: string
                     module_id?: string
                     score?: number

@@ -66,7 +66,7 @@ export async function submitQuiz(moduleId: string, answers: { questionId: string
             .select('quiz_attempts')
             .eq('user_id', user.id)
             .eq('module_id', moduleId)
-            .single();
+            .maybeSingle();
 
         const previousAttempts = currentProgress?.quiz_attempts || 0;
         const newAttempts = previousAttempts + 1;
@@ -79,7 +79,14 @@ export async function submitQuiz(moduleId: string, answers: { questionId: string
             else points = 0;
         }
 
-        const updateData: any = {
+        const updateData: {
+            user_id: string;
+            module_id: string;
+            quiz_attempts: number;
+            updated_at: string;
+            quiz_passed?: boolean;
+            quiz_score?: number;
+        } = {
             user_id: user.id,
             module_id: moduleId,
             quiz_attempts: newAttempts,
@@ -91,7 +98,14 @@ export async function submitQuiz(moduleId: string, answers: { questionId: string
             updateData.quiz_score = points;
         }
 
-        await supabase.from('user_progress').upsert(updateData, { onConflict: 'user_id, module_id' });
+        const { error: upsertError } = await supabase
+            .from('user_progress')
+            .upsert(updateData, { onConflict: 'user_id, module_id' });
+
+        if (upsertError) {
+            console.error('Error submitting quiz progress:', upsertError);
+            return { success: false, error: 'Failed to save progress' };
+        }
 
         if (passed) {
             revalidatePath('/', 'layout'); // Refresh Sidebar

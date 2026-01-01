@@ -33,7 +33,7 @@ export default function ExperientialDashboard() {
                         </CardHeader>
                         <CardContent>
                             <div className="h-40 flex items-center justify-center bg-neutral-950/50 rounded-lg border border-neutral-800">
-                                <SyncTimer />
+                                <SyncTimer isFacilitator={false} />
                             </div>
                         </CardContent>
                     </Card>
