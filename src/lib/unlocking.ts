@@ -21,10 +21,16 @@ export async function checkModuleUnlock(userId: string, moduleId: string): Promi
     }
 
     // 2. Find previous module
+    // Special case: Module 8 (PO) also depends on Module 6 completion, parallel to Module 7.
+    let targetOrder = currentModule.sort_order - 1;
+    if (currentModule.sort_order === 8) {
+        targetOrder = 6;
+    }
+
     const { data: prevModule, error: prevError } = await supabase
         .from('modules')
         .select('id')
-        .eq('sort_order', currentModule.sort_order - 1)
+        .eq('sort_order', targetOrder)
         .single();
 
     if (prevError || !prevModule) {

@@ -55,3 +55,48 @@ export async function addSkillToProfile(skill: string) {
 
     return { success: true };
 }
+
+export async function addBadgeToProfile(badge: string) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { error: 'Unauthorized' };
+    }
+
+    // 1. Get current badges
+    const { data: profile, error: fetchError } = await supabase
+        .from('profiles')
+        .select('badges')
+        .eq('id', user.id)
+        .single();
+
+    if (fetchError) {
+        console.error("Error fetching profile:", fetchError);
+        return { error: 'Failed to fetch profile' };
+    }
+
+    let currentBadges: string[] = [];
+    if (profile && profile.badges) {
+        currentBadges = profile.badges;
+    }
+
+    if (!currentBadges.includes(badge)) {
+        currentBadges.push(badge);
+
+        const { error: updateError } = await supabase
+            .from('profiles')
+            .update({ badges: currentBadges })
+            .eq('id', user.id);
+
+        if (updateError) {
+            console.error("Error updating profile (badges):", updateError);
+            return { error: 'Failed to update profile' };
+        }
+    }
+
+    revalidatePath('/modules');
+    revalidatePath('/profile');
+
+    return { success: true };
+}
