@@ -70,7 +70,7 @@ CREATE POLICY "Public Read Scenarios" ON scenarios FOR SELECT USING (true);
 
 -- MODULES
 INSERT INTO modules (id, title, description, category) VALUES
-('101', 'Vision e Mission Metàhodos', 'Aziende guidate da persone felici e veloci.', 'Mindset'),
+
 ('102', 'Agile Mindset', 'Growth vs Fixed Mindset: amare i problemi.', 'Mindset'),
 ('103', 'Il Mondo V.U.C.A.', 'Navigare nella Volatilità, Incertezza, Complessità e Ambiguità.', 'Context'),
 ('104', 'Framework Cynefin', 'Capire i domini: Semplice, Complicato, Complesso, Caotico.', 'Context'),
@@ -93,7 +93,6 @@ INSERT INTO modules (id, title, description, category) VALUES
 
 -- SCENARIOS
 INSERT INTO scenarios (id, module_id, title, description, role_target, difficulty, initial_context) VALUES
-('scenario_101', '101', 'L''Urgenza nel Mondo V.U.C.A.', 'Il Direttore Commerciale impone una modifica all''ultimo minuto.', 'Scrum Master / PO', 'Intermedio', 'Il Direttore entra urlando: "Il cliente Alpha vuole la modifica X ENTRO DOMANI!". Il team è carico. Cosa fai?'),
 ('scenario_102', '102', 'Doing Agile vs Being Agile', 'Zombie Scrum: meeting fatti, ma zero collaborazione.', 'Agile Coach', 'Avanzato', 'Il team fa il Daily leggendo appunti, senza guardarsi in faccia. Sembra una catena di montaggio. Come intervieni?'),
 ('scenario_103', '103', 'Felicità o Velocità?', 'Un manager critica le troppe risate nel team.', 'Agile Coach', 'Intermedio', 'Il Resp. Produzione dice: "Se si divertono, non lavorano". Difendi i valori Metàhodos.'),
 ('scenario_104', '104', 'Trasparenza Radicale', 'Progetto in ritardo, il PM vuole mentire al CEO (Semaforo Verde).', 'Scrum Master', 'Difficile', 'Devi convincere il PM a dire la verità brutale per permettere "Inspection & Adaptation".'),
@@ -116,9 +115,8 @@ INSERT INTO scenarios (id, module_id, title, description, role_target, difficult
 
 -- QUIZZES
 INSERT INTO quizzes (module_id, question, options, correct_answer, explanation) VALUES
-('101', 'Qual è la Vision dell''azienda Metàhodos?', '["Tras-formare sul campo le aziende", "Aziende guidate da persone felici e veloci", "Leader silenziosi", "Impegno e Rispetto"]', 'Aziende guidate da persone felici e veloci', 'La Vision è esplicitamente "Aziende guidate da persone felici e veloci".'),
 ('102', 'Quale mentalità è associata alla frase "Ho un problema da risolvere"?', '["Fixed Mindset", "Agile Mindset", "Growth Mindset", "Waterfall Mindset"]', 'Growth Mindset', 'Il Growth Mindset vede le sfide come opportunità di apprendimento.'),
-('103', 'L''acronimo V.U.C.A. sta per:', '["Vision, Unity, Clarity, Action", "Volatility, Uncertainty, Complexity, Ambiguity", "Value, Understanding, Collaboration", "Velocity, Usability, Cost"]', 'Volatility, Uncertainty, Complexity, Ambiguity', 'Descrive la natura imprevedibile del contesto moderno.'),
+('103', 'L''acronimo V.U.C.A. sta per:', '["Vision, Unity, Clarity, Action", "Volatility, Uncertainty, Complexity, Ambiguità", "Value, Understanding, Collaboration", "Velocity, Usability, Cost"]', 'Volatility, Uncertainty, Complexity, Ambiguità', 'Descrive la natura imprevedibile del contesto moderno.'),
 ('104', 'Nel framework Cynefin, quale approccio si adotta in un dominio Complesso?', '["Sense, Analyse, Respond", "Act, Sense, Respond", "Probe, Sense, Respond", "Sense, Categorize, Respond"]', 'Probe, Sense, Respond', 'Nei sistemi complessi la relazione causa-effetto non è nota a priori, bisogna sondare (Probe).'),
 ('105', 'Vero o Falso: Il modello Waterfall è efficace nei cambiamenti continui.', '["Vero", "Falso"]', 'Falso', 'Waterfall è rigido e fatica a gestire i cambiamenti in corso d''opera.'),
 ('106', 'Dove e quando è nato il Manifesto Agile?', '["Utah, Febbraio 2001", "Giappone, Anni 30", "OOPSLA, 1995", "US Army, 2001"]', 'Utah, Febbraio 2001', 'Diciassette professionisti si incontrarono a Snowbird, Utah.'),
@@ -139,10 +137,6 @@ INSERT INTO quizzes (module_id, question, options, correct_answer, explanation) 
 
 -- LESSONS (Batch 1 + Batch 2)
 INSERT INTO lessons (module_id, title, order_index, content) VALUES
-('101', 'La Vision: Felici e Veloci', 1, '# Aziende guidate da persone felici e veloci\n\nLa nostra Vision è chiara: crediamo che la felicità delle persone sia il motore della velocità aziendale.\n\nNon si tratta di "buonismo", ma di efficienza. Un team felice:\n- Collabora meglio\n- Risolve problemi più in fretta\n- È più creativo\n- Ha meno turnover\n\nLa velocità è una conseguenza del benessere, non il contrario.'),
-('101', 'La Mission: Tras-formare sul campo', 2, '# Tras-formare sul campo\n\nNon facciamo solo consulenza teorica. La nostra Mission è "Tras-formare sul campo le aziende verso la business agility".\n\nSignifica:\n- Lavorare fianco a fianco con i team\n- Applicare i principi nel lavoro reale\n- Non usare slide, ma post-it e codice\n- Misurare i risultati concreti'),
-('101', 'Il Paradosso della Lentezza', 3, '# Per andare veloci, bisogna rallentare\n\nSembra un paradosso, ma per aumentare la velocità sostenibile bisogna spesso rallentare per:\n- Ridurre il debito tecnico\n- Migliorare la qualità\n- Allinearsi sugli obiettivi\n- La fretta (rushing) porta errori. La velocità (speed) porta valore.'),
-('101', 'Leadership Servente', 4, '# Il Leader Agile\n\nIn Metàhodos, il leader non è chi comanda, ma chi serve.\n\nIl "Servant Leader":\n- Rimuove gli ostacoli\n- Protegge il team dalle interferenze\n- Facilita la crescita delle persone\n- Non dà soluzioni, ma pone le giuste domande.'),
 ('102', 'Growth vs Fixed Mindset', 1, '# Due modi di pensare\n\nAl centro del Mindset Agile c''è la distinzione di Carol Dweck:\n\n**Fixed Mindset**:\n- Evita le sfide\n- Si arrende agli ostacoli\n- Vede lo sforzo come inutile\n- Ignora i feedback negativi\n\n**Growth Mindset**:\n- Abbraccia le sfide\n- Persevera di fronte agli ostacoli\n- Vede lo sforzo come via per la maestria\n- Impara dalle critiche'),
 ('102', 'Ho un problema da risolvere', 2, '# La reazione all''errore\n\nDi fronte a un problema, il Fixed Mindset dice: "O no! Che sfortuna, capitano tutte a me. Vado già bene così".\n\nIl Growth Mindset dice: **"Ho un problema da risolvere"**.\n\nQuesta semplice frase cambia tutto. Trasforma la vittima in protagonista attivo.'),
 ('102', 'Culto dell''Apprendimento', 3, '# Imparare > Eseguire\n\nIn Agile, l''obiettivo non è solo "finire il task", ma imparare qualcosa di nuovo sul prodotto o sul processo.\n\nOgni fallimento è un''opportunità di apprendimento (Fail Fast, Learn Faster). Se no fallisci mai, non stai innovando.'),
