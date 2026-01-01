@@ -86,6 +86,12 @@ export default function QuizRunner({ quizId, questions, moduleId }: QuizRunnerPr
                         <p className="text-gray-600 dark:text-gray-300 mb-6">
                             You earned <span className="font-bold text-blue-600 text-xl">{finalScore} points</span>.
                         </p>
+                        {/* Custom message for Module 3 */}
+                        {moduleId && moduleId.includes('mdl-03') || questions[0].text.includes("Vision") ? (
+                            <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
+                                <p className="text-indigo-800 font-medium">Visione approvata. Ora sei pronto per costruire il tuo MVP.</p>
+                            </div>
+                        ) : null}
                         <button onClick={() => router.push(`/modules/${moduleId}`)} className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
                             Return to Module
                         </button>
@@ -128,8 +134,8 @@ export default function QuizRunner({ quizId, questions, moduleId }: QuizRunnerPr
                             key={idx}
                             onClick={() => setSelectedOption(idx)}
                             className={`w-full text-left p-4 rounded-xl border transition-all ${selectedOption === idx
-                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-200 dark:ring-blue-800'
-                                    : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-200 dark:ring-blue-800'
+                                : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                                 }`}
                         >
                             <span className="inline-block w-6 font-bold text-gray-400 mr-2">{String.fromCharCode(65 + idx)}.</span>
